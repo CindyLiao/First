@@ -1,0 +1,27 @@
+//
+   Created by hadoop on 16-3-5.
+extend ../layout
+
+block content
+   .container
+      .row
+         form.form-horizontal(method="post",action="/admin/movie/new")
+            input(type="hidden", name="movie[_id]", value=movie._id)
+            .form-group
+               label.col-sm-2.control-label(for="inputTitle") URL地址
+               .col-sm-10
+                  input#inputTitle.form-control(type="text",name="movie[title]",value=movie.title)
+            .form-group
+               label.col-sm-2.control-label(for="inputDoctor") 用户名
+               .col-sm-10
+                  input#inputDoctor.form-control(type="text",name="movie[doctor]",value=movie.doctor)
+            .form-group
+               label.col-sm-2.control-label(for="inputCountry") 密码
+               .col-sm-10
+                  input#inputCountry.form-control(type="text",name="movie[country]",value=movie.country)
+            .form-group
+               .col-sm-offset-2
+               .col-sm-10
+               button.btn.btn-default(type="submit") 录入
+
+
