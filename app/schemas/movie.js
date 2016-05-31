@@ -1,10 +1,10 @@
 /**
  * Created by yuzaizai on 2016/4/17.
  */
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 
 var MovieSchema = new mongoose.Schema({
-   doctor: String,
+    doctor: String,
     title:String,
     language:String,
     country:String,

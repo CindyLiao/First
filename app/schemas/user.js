@@ -3,7 +3,7 @@
  */
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-node'); //密码存储的库
-var SALT_WORK_FACTOR = 10
+var SALT_WORK_FACTOR = 10;
 //哈希加盐不可逆
 var UserSchema = new mongoose.Schema({
     name: {
@@ -11,6 +11,14 @@ var UserSchema = new mongoose.Schema({
         type: String
     },
     password: String,
+    level: {
+        type: Number,
+        default: 1
+    },
+    type: {
+        type:String,
+        default: "普通用户"
+    },
     meta: {
         createAt: {
             type: Date,
@@ -21,7 +29,7 @@ var UserSchema = new mongoose.Schema({
             default: Date.now()
         }
     }
-})
+});
 
 UserSchema.pre('save', function(next) {
     var user = this;
@@ -52,7 +60,7 @@ UserSchema.methods = {
             cb(null, isMatch)
         })
     }
-}
+};
 
 UserSchema.statics = {
     fetch: function(cb) {
@@ -66,6 +74,6 @@ UserSchema.statics = {
             .findOne({_id: id})
             .exec(cb)
     }
-}
+};
 
 module.exports = UserSchema;

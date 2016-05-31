@@ -6,8 +6,7 @@ var path = require('path');//静态资源路径获取
 //引入mongoose数据块连接数据库
 var mongoose = require('mongoose');
 //模型的加载
-var Movie = require('./app/models/movie');
-var User = require('./app/models/user');
+
 //underscore extend方法中可以用新的模块替换旧的模块
 var _ = require('underscore');
 
@@ -18,7 +17,7 @@ app.locals.moment = require('moment');
 var logger = require('morgan');
 
 //连接数据库
-mongoose.connect('mongodb://localhost/imooc');
+mongoose.connect('mongodb://localhost/mapping');
 
 
 app.set('views','./app/views/pages');//视图页面

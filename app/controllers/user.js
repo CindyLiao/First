@@ -58,11 +58,18 @@ exports.signup = function(req,res){
         if (user){
             return res.redirect('/signin');
         } else {
+            user = new User(_user);
             user.save(function(err,user){
                 if (err) {
                     console.log(err);
                 }
-                res.redirect('/admin/userlist');
+                else {
+
+                    res.render('organsignup',{
+                        user: user
+                    });
+                }
+
             });
         }
     });
@@ -76,7 +83,7 @@ exports.signinRequired = function(req, res, next) {
     if (!user) {
         return res.redirect('/signin')
     }
-
+    req.session.user = user;
     next();
 };
 exports.adminRequired = function(req, res, next) {
@@ -85,7 +92,6 @@ exports.adminRequired = function(req, res, next) {
     if (user.role <= 10) {
         return res.redirect('/signin')
     }
-
     next()
 };
 //logout
