@@ -1,0 +1,51 @@
+//
+   Created by yuzaizai on 2016/12/1.
+extends ../userLayout
+
+block head
+   style.
+      td.details-control {
+      background: url('http://localhost:3000/images/details_open.png') no-repeat center center;
+      cursor: pointer;
+      }
+      tr.shown td.details-control {
+      background: url('http://localhost:3000/images/details_close.png') no-repeat center center;
+      }
+      tbody>tr:nth-child(odd)>td {
+      background-color: #f9f9f9;
+      }
+      .custom tr td {
+      border: 1px solid #ddd;
+         padding: 8px;
+      }
+block content
+   .container
+      input(name="mapId",id="mapId", type="hidden" ,value='#{mapId}')
+      input(name="organPosId",id="organPosId", type="hidden" ,value='#{organPosId}')
+      input(name="organPosName",id="organPosName", type="hidden" ,value='#{organPosName}')
+      .modal-body
+      form(method="POST", action="",id="EditOrganRoleForm")
+         table.table.table-hover.table-bordered(id="EditOrganRoleTable1")
+            thead
+               tr
+                  th
+                  th 应用角色名
+                  th: input.form-control(name="iCheck",type="checkbox",id="checkAll",onclick="selectAll();",value='0')
+            tbody
+               if organRole2busiRoleLists != null
+                  input(name="organRole2busiRoleLists",id="organRole2busiRoleLists", type="hidden" ,value='#{JSON.stringify(organRole2busiRoleLists)}')
+                  each o2b in organRole2busiRoleLists
+                     tr(class="item-id-#{o2b._id}")
+                        td(class="details-control",data-id="#{o2b._id}",data-value="#{o2b.busiRoleName}")
+                        td  #{o2b.busiRoleName}
+                        if ( o2b.organRolePosList != null)
+                           input(name="organRolePosList",id="#{o2b._id}", type="hidden" ,value='#{JSON.stringify(o2b.organRolePosList)}')
+                        if o2b.isMapped
+                           td: input.form-control(name="iCheck",type="checkbox",checked, id="busiRole#{o2b._id}",onclick="setSelectSubAll(\'#{o2b.busiRoleName}\',\'#{o2b._id}\');")
+                        else
+                           td: input.form-control(name="iCheck",type="checkbox",id="busiRole#{o2b._id}",onclick="setSelectSubAll(\'#{o2b.busiRoleName}\',\'#{o2b._id}\');")
+      .modal-footer
+         button.button-glow.button-border.button-rounded.button-primary(name="organRole",type="button",value="",id="",onclick="submitForm();") 提交
+         button.button-glow.button-border.button-rounded.button-action(name="organRole",type="button",value="",id="",onclick="back();") 返回
+         input(name="submitToken", value="#{submitToken}", type="hidden", id="submitToken")
+      script(type='text/javascript',charset='UTF-8',src='/js/EditOrganRoleMappingById.js')

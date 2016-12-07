@@ -1,0 +1,38 @@
+//
+   Created by yuzaizai on 2016/11/14.
+extends ../userLayout
+block head
+
+block content
+  .container
+    input(name="mapId",id="mapId", type="hidden" ,value='#{mapId}')
+    input(name="organPosId",id="organPosId", type="hidden" ,value='#{organPosId}')
+    input(name="organPosName",id="organPosName", type="hidden" ,value='#{organPosName}')
+    .modal-body
+    form(method="POST", action="",id="EditOrganPosForm")
+        table.table.table-hover.table-bordered(id="EditOrganPosTable1")
+            thead
+                tr
+                    th 应用角色名
+                    th: input.form-control(name="iCheck",type="checkbox",id="checkAll",onclick="selectAll();",value='0')
+            tbody
+                if busiRoles != null
+                    each busiRole in busiRoles
+                        tr(class="item-id-#{busiRole._id}")
+                            td  #{busiRole.name}
+                            td: input.form-control(name="iCheck",type="checkbox",id='subcheck',data-id="#{busiRole._id}",value="#{busiRole.name}",onclick="setSelectAll();")
+                if markedBusiRoleLists != null
+                    each markedBusiRole in markedBusiRoleLists
+                        if markedBusiRole.isMapped
+                            tr(class="item-id-#{markedBusiRole.busiRoleId}")
+                                td  #{markedBusiRole.busiRoleName}
+                                td: input.form-control(name="iCheck",type="checkbox",checked,id='subcheck',data-id="#{markedBusiRole.busiRoleId}",value="#{markedBusiRole.busiRoleName}",onclick="setSelectAll();")
+                        else
+                            tr(class="item-id-#{markedBusiRole.busiRoleId}")
+                                td  #{markedBusiRole.busiRoleName}
+                                td: input.form-control(name="iCheck",type="checkbox",id='subcheck',data-id="#{markedBusiRole.busiRoleId}",value="#{markedBusiRole.busiRoleName}",onclick="setSelectAll();")
+    .modal-footer
+        button.button-glow.button-border.button-rounded.button-primary(name="organPos",type="button",value="",id="",onclick="submitForm();") 提交
+        button.button-glow.button-border.button-rounded.button-action(name="organPos",type="button",value="",id="",onclick="back();") 返回
+        input(name="submitToken", value="#{submitToken}", type="hidden", id="submitToken")
+    script(type='text/javascript',charset='UTF-8',src='/js/EditOrganPosMappingById.js')

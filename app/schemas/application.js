@@ -12,6 +12,10 @@ var AppliSchema = new mongoose.Schema({
     userId: String,
     account:String,
     accessPwd: String,
+    mapState: {
+        Type: Boolean,
+        default: false
+    },
     meta: {
         createAt: {
             type: Date,

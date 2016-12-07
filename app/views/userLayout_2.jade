@@ -1,0 +1,91 @@
+//
+   Created by yuzaizai on 2016/11/2.
+
+doctype html
+html
+   head
+      meta(charset="utf-8")
+      title MappingOn - 我的映射
+      style(type='text/css').
+         body {
+            font-family: 'Microsoft Yahei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+         }
+      include includes/head
+      #header
+         #header_nav
+            .header_nav_items
+               a.logo(href='/')
+                  img(src='../images/logo_m.png')
+               a.header_nav_link(href='/map/userMappings') 我的映射
+               a.header_nav_link(href='/popular') 推荐
+               a.header_nav_link(href='/explore') 发现
+               a.header_nav_link(href='/teams') 小组
+            .header_search
+               form#global_form(action='/search', method='get', onsubmit='return Header.doSearch();')
+                  input#global_input(type='text', name='q', value='', placeholder='搜索')
+            .header_right
+               .header_label
+                  a.header_ico.add_file(href='/diagrams/new', target='_blank', title='新建文件')
+               #header-user.header-user
+                  img.radius3(src='../images/photo.jpg')
+                  | #{user.name}
+                  span.header-drop
+                  a.notification_badge(href='javascript:void(0)')
+                  ul#header_user_menu
+                     li
+                        a(href='/u/55e70601e4b095f061cb5232/profile', target='_blank') 个人主页
+                     li
+                        a.noover(href='/notification')
+                           | 通知中心
+                           span.badge.warning.global-tip
+                     li
+                        a.noover(href='/message')
+                           | 私信
+                           span.badge.warning.global-tip
+                     li
+                        a.noover(href='/setting') 账户设置
+                     li
+                        a.noover(href='/support') 帮助（反馈）
+                     li
+                        a(href='/logout') 退出
+      #header_clear(style='width:100%;clear:both;height:42px;')
+
+      block head
+   body
+      #bg-content
+      .network
+         .network-left
+            a.network-menu(href='/user/userpage', tit='home')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.home.ac
+                  span.network-menu-title 首页
+            a.network-menu(href='/map/userMappings', tit='diagrams')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.files
+                  span.network-menu-title 我的映射
+            a.network-menu(href='/organ/organList', tit='teams')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.teams
+                  span.network-menu-title 我的组织
+            a.network-menu(href='/app/appList', tit='friends')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.friends
+                  span.network-menu-title 我的应用
+            a.network-menu(href='/network/invite', tit='invite')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.message
+                  span.network-menu-title 统计
+         script(type='text/javascript').
+            var bgurl = "../images/back.png";
+            if (bgurl != "") {
+               $("#bg-content").css({
+                  "background-image": "url(../images/back.png)"
+               });
+            }
+            $(".network-menu[tit=diagrams]").addClass("active").siblings().removeClass("active");
+            $(".network-menu[tit] .nav-icons").removeClass("ac");
+            $(".network-menu[tit=diagrams] .nav-icons").addClass("ac");
+         .network-right
+            block content
+
+

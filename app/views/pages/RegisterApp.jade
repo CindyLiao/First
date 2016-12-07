@@ -1,7 +1,7 @@
 //
    Created by yuzaizai on 2016/5/29.
 
-extends ../layout
+extends ../userLayout
 block content
    .container
       .row
@@ -9,19 +9,20 @@ block content
             form(method="POST", action="/app/appSignup")
                .modal-body
                   .form-group
-                     label(for="appName") Ó¦ÓÃÃû
+                     label(for="appName") åº”ç”¨å
                      input#organName.form-control(name="application[appName]", type="text")
                   .form-group
                      label(for="appUri") URI
                      input#organUri.form-control(name="application[uri]",type="text")
                   .form-group
-                     label(for="appAccount") ·ÃÎÊÕËºÅ
+                     label(for="appAccount") è®¿é—®è´¦å·
                      input#organUri.form-control(name="application[account]",type="text")
                   .form-group
-                     label(for="accessPwd") ·ÃÎÊÃÜÂë
+                     label(for="accessPwd") è®¿é—®å¯†ç 
                      input#accessPwd.form-control(name="application[accessPwd]", type="password")
                   .form-group
                      input(name="application[userId]", type="hidden" ,value=user._id)
                .modal-footer
-                  button.btn.btn-default(type="button", data-dismiss="modal") ¹Ø±Õ
-                  button.btn.btn-success(type="submit") Ìá½»
+                  button.btn.btn-default(type="button", data-dismiss="modal") å…³é—­
+                  button.btn.btn-success(type="submit") æäº¤
+

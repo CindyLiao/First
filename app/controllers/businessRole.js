@@ -1,14 +1,14 @@
 /**
  * Created by yuzaizai on 2016/5/29.
  */
-var BusiRole = require('../models/businessRole');
-var Appli = require('../models/application');
+var BusiRole = require('../models/BusinessRole');
+var Appli = require('../models/Application');
 var request = require('request');
 
-exports.addAppRole = function(req,res) {
+exports.addBusiRole = function(req,res) {
     var appli = req.session.appli;
     var userId = req.session.user._id.toString();
-
+    var _busiRoles = new Array();
     request.get({url:appli.uri},function(error,roleNames){
 
         console.log(roleNames.body);
@@ -19,10 +19,11 @@ exports.addAppRole = function(req,res) {
         var len = obj.roles.length;
         var i=0;
         for(;i<len;i++) {
-            var busirole = new BusiRole();
+            var busirole = new BusiRole();  // 获取业务角色
             busirole.name = obj.roles[i].roleName;
-            busirole.organId = organ._id.toString();
+            busirole.appName = appli.appName;
             busirole.userId = userId;
+            _busiRoles.push(busirole);
             busirole.save(function (error, bs) {
                 if (error) {
                     console.log(error);
@@ -30,19 +31,36 @@ exports.addAppRole = function(req,res) {
                 console.log(bs);
             });
         }
-        res.redirect('/organrole/organroleList');
+        res.render('BusiRoleList',{
+            roles:_busiRoles
+        })
     })
 
 };
 
-//organroleList
+//busiroleList
 exports.busiroleList = function(req,res) {
-    OrganRole.fetch(function(error,roles){
+    var _appName = req.params.name;
+    var _userId = req.session.user._id.toString();
+    BusiRole.find({userId:_userId,appName:_appName},function(error,roles){
         if(error) {
             console.log(error);
         }
-        res.render('busiroleList',{
-            roles:roles
-        })
+        if (roles.length>0 ) {
+            res.render('BusiRoleList',{
+                roles:roles
+            })
+        } else {
+            Appli.findOne({appName:_appName},function(err,app){
+                if(err) {
+                    console.log(err);
+                }
+                if(app) {
+                    req.session.appli = app;
+                    res.redirect('/busirole/addBusiRole');
+                }
+            })
+        }
+
     })
 };

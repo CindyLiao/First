@@ -16,7 +16,7 @@ var OrganUpdateSchema= new mongoose.Schema({
             default: Date.now()
         }
     }
-})
+});
 OrganUpdateSchema.statics = {
     fetch: function(cb) {
         return this

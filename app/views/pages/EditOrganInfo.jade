@@ -1,0 +1,28 @@
+//
+   Created by yuzaizai on 2016/11/25.
+
+extends ../userLayout
+block content
+   .container
+      .row
+         .col-md-5
+            form(method="POST", action="/organ/updateOrganInfo",id="EditOrganForm")
+               .modal-body
+                  .form-group
+                     label(for="organName") 组织名
+                     input#organName.form-control(name="organization[organName]", type="text",disabled='true',value="#{organ.organName}")
+                  .form-group
+                     label(for="organPosUri") 职位访问URI
+                     input#organPosUri.form-control(name="organization[posUri]",type="text",value="#{organ.posUri}")
+                  .form-group
+                     label(for="organRoleUri") 角色访问URI
+                     input#organRoleUri.form-control(name="organization[roleUri]",type="text",value="#{organ.roleUri}")
+                  .form-group
+                     label(for="organDepUri") 部门访问URI
+                     input#organDepUri.form-control(name="organization[depUri]", type="text",value="#{organ.depUri}")
+                  .form-group
+                     input(name="organization[userId]", type="hidden" ,value=user._id)
+               .modal-footer
+                  button.btn.btn-default(type="button", data-dismiss="modal",onclick='backOrganList();') 返回
+                  button.btn.btn-success(type="button",onclick='editOrgan();') 提交
+   script(src='/js/SignupOrgan.js')

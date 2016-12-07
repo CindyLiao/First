@@ -1,19 +1,19 @@
 /**
  * Created by yuzaizai on 2016/4/24.
  */
-var User = require('../models/user');
+var User = require('../models/User');
 
 
 //show Signup
 exports.showSignup = function(req,res) {
-    res.render('signup',{
+    res.render('Signup',{
         title: '注册页面'
     })
 };
 
 //show Signin
 exports.showSignin = function(req,res) {
-    res.render('signin',{
+    res.render('Signin',{
         title: '登录页面'
     })
 };
@@ -37,7 +37,7 @@ exports.signin= function(req,res){
                 }
                 if(isMatch){
                     req.session.user = user;
-                    res.redirect('/');
+                    res.redirect('/user/userpage');
                 } else {
                     res.redirect('/signin');
                 }
@@ -64,10 +64,8 @@ exports.signup = function(req,res){
                     console.log(err);
                 }
                 else {
-
-                    res.render('organsignup',{
-                        user: user
-                    });
+                    req.session.user = user;
+                    res.redirect('/organ/showsignup');
                 }
 
             });
@@ -98,7 +96,7 @@ exports.adminRequired = function(req, res, next) {
 exports.logout = function(req,res){
     delete req.session.user;
   //  app.locals.user=null;
-    res.redirect('/')
+    res.redirect('/');
 };
 
 //userlist page
@@ -107,9 +105,16 @@ exports.list = function(req,res){
         if (err) {
             console.log(err);
         }
-        res.render('userlist',{
+        res.render('UserList',{
             title:'用户管理页',
             users: users
         })
     })
+};
+
+// userPage
+exports.userPage = function(req,res) {
+   res.render('UserPage',{
+       title: '用户详情页'
+   })
 };

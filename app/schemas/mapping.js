@@ -1,17 +1,16 @@
 /**
  * Created by yuzaizai on 2016/5/24.
  */
+// 组织系统、应用系统映射表
 var mongoose = require('mongoose');
 
-var MappSchema = mongoose.Schema({
-   name: String,
+var MappSchema = new mongoose.Schema({
+   mapName: String,
    userId : String,
-   organId: String,
-   busiId: String,
-   organRoleId:String,
-   busiRoleId: String,
+   organName: String,
+   appName: String,
    timesUpdate: Number,
-   state: Number,
+   mapState: Number,
    meta: {
         createAt: {
             type: Date,

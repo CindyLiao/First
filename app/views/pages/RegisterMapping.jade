@@ -1,0 +1,27 @@
+//
+   Created by yuzaizai on 2016/11/2.
+extends ../userLayout
+
+
+block content
+   .container
+      .row
+         .col-md-5
+            form(method="POST", action="/map/registerMapping")
+               .modal-body
+                  .form-group
+                     label(for="mapName") 映射名
+                     input#organName.form-control(name="mapping[mapName]", type="text")
+                  .form-group
+                     label(for="organName") 组织名称
+                     input#organUri.form-control(name="mapping[organName]",type="text")
+                  .form-group
+                     label(for="appName") 应用名称
+                     select#appliName.form-control(name="mapping[appName]")
+                        each appli in applis
+                           option #{appli.appName}
+                  .form-group
+                     input(name="mapping[userId]", type="hidden" ,value=user._id)
+               .modal-footer
+                  button.btn.btn-default(type="button", data-dismiss="modal") 关闭
+                  button.btn.btn-success(type="submit") 创建

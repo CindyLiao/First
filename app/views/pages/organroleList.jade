@@ -1,14 +1,14 @@
 //
    Created by yuzaizai on 2016/5/26.
 
-extends ../layout
+extends ../userLayout
 block content
    .container
       .row
          table.table.table-hover.table-bordered
             thead
                tr
-                  th 组织名称
+                  th 组织角色名
                   th
 
             tbody
@@ -17,4 +17,4 @@ block content
                      td #{role.name}
                      td
                         button.btn.btn-danger.del(type="button", data-id="#{role._id}") 刷新
-   //-script(src="../js/admin.js")
+   //-script(src="../js/Admin.js")

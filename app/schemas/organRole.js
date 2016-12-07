@@ -1,14 +1,19 @@
 /**
  * Created by yuzaizai on 2016/5/24.
  */
-var monoose = require('mongoose');
+var mongoose = require('mongoose');
 
-var OrganRoleSchema = new monoose.Schema({
+var OrganRoleSchema = new mongoose.Schema({
+    roleId: String,
     name: String,
     proper: String,
-    organId: String,
+    organName: String,
     timesUpdate: Number,
     userId: String,
+    mapStatu: {
+        Type: Number,
+        default:0
+    },
     meta: {
         createAt: {
         type: Date,
@@ -17,6 +22,7 @@ var OrganRoleSchema = new monoose.Schema({
         updateAt: {
         type: Date,
         default: Date.now()
+
         }
     }
 });

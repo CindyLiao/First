@@ -5,15 +5,19 @@ extends ../layout
 block content
    .container
       .row
+         a(href='/')
+            img(style='paddingLeft:20px;',src='/images/title.png', border='0')
+      .row
          .col-md-5
-            form(method="POST", action="/user/signup")
+            form(method="POST", action="/user/signup",id="signForm")
                .modal-body
                   .form-group
-                     label(for="signupName") 用户名
-                     input#signupName.form-control(name="user[name]", type="text")
+                     label(for="signupNameLabel") 用户名
+                     input.form-control(name="user[name]", type="text", id="userName")
                   .form-group
-                     label(for="signupPassword") 密码
-                     input#signupPassword.form-control(name="user[password]", type="password")
+                     label(for="signupPasswordLabel") 密码
+                     input#userPassword.form-control(name="user[password]", type="password")
                .modal-footer
                   button.btn.btn-default(type="button", data-dismiss="modal") 关闭
-                  button.btn.btn-success(type="submit") 下一步
+                  button.btn.btn-success(type="button", onclick="sign();") 下一步
+   script(src="/js/Sign.js")

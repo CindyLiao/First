@@ -1,31 +1,51 @@
 //
    Created by yuzaizai on 2016/5/27.
 
-extends ../layout
+extends ../userLayout
+block network-nav
+   script(type='text/javascript').
+      $(".network-menu[tit=organs]").addClass("active").siblings().removeClass("active");
+      $(".network-menu[tit] .nav-icons").removeClass("ac");
+      $(".network-menu[tit=organs] .nav-icons").addClass("ac");
 block content
-   .container
-      .row
-         table.table.table-hover.table-bordered
-            thead
-               tr
-                  th 组织名称
-                  th URI
-                  th 访问账号
-                  th 访问密码
-                  th 录入时间
-                  th 查看
-                  th 修改
-                  th 删除
-            tbody
-               each organ in organs
-                  tr(class="item-id-#{organ._id}")
-                     td #{organ.organName}
-                     td #{organ.uri}
-                     td #{organ.account}
-                     td #{organ.accessPwd}
-                     td #{moment(organ.meta.updateAt).format('MM/DD/YYYY')}
-                     td: a(target="_blank",href="../movie/#{organ._id}") 查看
-                     td: a(target="_blank",href="../admin/update/#{organ._id}") 修改
-                     td
-                        button.btn.btn-danger.del(type="button", data-id="#{organ._id}") 删除
-   script(src="../js/admin.js")
+   form(method="GET", action="",id = "registerOrganInfoForm")
+      .content-left(style='overflow:hidden;')
+         .network-nav
+         .network-nav-items.active( tit='all',onclick="registerOrgan();")
+            span.nav-icons.myfile
+            span.nav-item-title  注册组织信息
+         .network-nav-items(tit='collaboration', onclick="editOrgan();")
+            span.nav-icons.mycola
+            span.nav-item-title 编辑组织信息
+         .network-nav-items(tit='fav', onclick="")
+            span.nav-icons.mylike
+            span.nav-item-title 我的收藏
+         .network-nav-items(tit='history', onclick="")
+            span.if.if-history.myhistory
+            span.nav-item-title 最近修改
+
+   table.table.table-hover.table-bordered(id="organListTable1")
+      thead
+         tr
+            th 组织名称
+            th 职位URI
+            th 角色URI
+            th 部门URI
+            th 录入时间
+            th 查看
+            th 删除
+      tbody
+         each organ in organs
+            tr(class="item-id-#{organ._id}")
+               td #{organ.organName}
+               td #{organ.posUri}
+               td #{organ.roleUri}
+               td #{organ.depUri}
+               td #{moment(organ.meta.updateAt).format('YYYY/MM/DD')}
+               td: a(target="_blank",href="/organpos/organPosList/#{organ.organName}") 查看职位
+                   a(target="_blank",href="/organrole/organRoleList/#{organ.organName}") 查看角色
+                   a(target="_blank",href="/organdep/organDepList/#{organ.organName}") 查看部门
+               td
+                  button.btn.btn-danger.del(type="button", data-id="#{organ._id}") 删除
+
+   script(src="/js/OrganizationList.js")

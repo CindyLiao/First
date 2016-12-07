@@ -1,0 +1,25 @@
+//
+   Created by yuzaizai on 2016/11/23.
+
+extends ../userLayout
+block content
+   .network-content
+      .content-left
+         table.table.table-hover.table-bordered(id="organPosListTable")
+            thead
+               tr
+                  th 职位名称
+                  th 所属组织
+                  th 所属部门
+                  th 所属角色
+                  th
+               tbody
+                  each position in positions
+                     tr(class="item-id-#{position._id}")
+                        td #{position.posName}
+                        td #{position.organName}
+                        td #{position.depName}
+                        td #{position.roleName}
+                        td
+                           button.btn.btn-danger.del(type="button", data-id="#{position._id}") 刷新
+   script(src='/js/OrganPosList.js',type='text/javascript',charset='UTF-8')

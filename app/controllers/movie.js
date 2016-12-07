@@ -2,14 +2,14 @@
  * Created by yuzaizai on 2016/4/24.
  */
 
-var Movie = require('../models/movie');
+var Movie = require('../models/Movie');
 var _ = require('underscore');
 
 //detail page
 exports.detail = function(req,res){
     var id = req.params.id;
     Movie.findById(id,function(err,movie){
-        res.render('detail',{
+        res.render('Detail',{
             title: '详情页',
             movie: movie
         })
@@ -22,7 +22,7 @@ exports.update = function(req,res) {
     var id = req.params.id;
     if(id) {
         Movie.findById(id,function(err,movie){
-            res.render('admin',{
+            res.render('Admin',{
                 title:'后台更新页面',
                 movie:movie
             })
@@ -73,7 +73,7 @@ exports.list = function(req,res){
         if (err) {
             console.log(err);
         }
-        res.render('list',{
+        res.render('List',{
             title: '表单页',
             movies: movies
         })
@@ -97,7 +97,7 @@ exports.del = function(req,res){
 
 //admin new page
 exports.new = function(req,res){
-    res.render('admin',{
+    res.render('Admin',{
         title: ' 录入页',
         movie: {
             docotr: '',

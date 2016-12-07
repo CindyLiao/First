@@ -1,38 +1,52 @@
 /**
  * Created by yuzaizai on 2016/5/24.
  */
-var User = require('../models/application');
-
+var Appli = require('../models/Application');
+var BusiRole = require('../models/BusinessRole');
 var request = require('request');
 
 //show applicatlion signup
 exports.showSignup = function (req,res) {
-    res.render('appSignup',{
-        title: "Ó¦ÓÃ×¢²áÒ³Ãæ"
+    res.render('RegisterApp',{
+        title: "åº”ç”¨æ³¨å†Œé¡µé¢"
     })
 };
 
 exports.appSignup = function(req,res) {
     var _application = req.body.application;
-    Organ.findOne({appName:_application.appName},function(err,appli){
+    Appli.findOne({appName:_application.appName},function(err,appli){
         if (err){
             console.log(err);
         }
-        if (appli){//ÅĞ¶ÏÓ¦ÓÃÊÇ·ñÒÑ¾­´æÔÚ
-            return res.redirect('/');
-        } else { //²»´æÔÚÔò½«±£´æ×éÖ¯ĞÅÏ¢
-            appli = new Organ(_application);
+        if (appli){//åˆ¤æ–­åº”ç”¨åæ˜¯å¦å·²ç»å­˜åœ¨
+            console.log(_application.appName+"å·²ç»å­˜åœ¨ï¼");
+            return res.redirect('/app/ShowSignup');
+        } else { //ä¸å­˜åœ¨åˆ™å°†ä¿å­˜åº”ç”¨ç»„ç»‡ä¿¡æ¯
+            appli = new Appli(_application);
             appli.save(function(err,appli){
                 if (err) {
                     console.log(err);
                 }
                 if(appli){
                     req.session.appli = appli;
-                    res.redirect('/approle/addAppRole');
+                    res.redirect('/busirole/addBusiRole');
                 }
             });
         }
     });
-    console.log(_organization);
+    console.log(_application);
+};
+
+exports.appList = function(req,res) {
+    var userId = req.session.user._id.toString();
+    Appli.find({userId:userId},function(err,applis) {
+        if(err){
+            console.log("appList"+err);
+        }
+        res.render("ApplicationList",{
+                applis:applis
+        })
+
+    });
 
 };

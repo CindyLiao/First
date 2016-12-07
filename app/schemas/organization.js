@@ -5,16 +5,25 @@ var mongoose = require('mongoose');
 
 var OrganSchema = new mongoose.Schema({
     organName: String,
-    uri: {
+    posUri: {
         unique: true,
         type: String
     },
-    userId: {
+    roleUri: {
         unique: true,
-        type : String
+        type: String
     },
+    depUri: {
+        unique: true,
+        type: String
+    },
+    userId: String,
     account: String,
     accessPwd : String,
+    mapState: {
+        Type: Boolean,
+        default: false
+    },
     meta: {
         createAt: {
             type: Date,
