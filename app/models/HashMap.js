@@ -89,10 +89,12 @@
         for (var hash in this.entries) {
             if (this.entries.hasOwnProperty(hash)) {
                 var bucket = this.entries[hash];
-                for (var i = 0, max = bucket.length; i < max; i++) {
-                    var entry = bucket[i];
-                    if (entry) {
-                        arr.push(entry.value);
+                if ( bucket !=null && bucket.length > 0 ) {
+                    for (var i = 0, max = bucket.length; i < max; i++) {
+                        var entry = bucket[i];
+                        if (entry) {
+                            arr.push(entry.value);
+                        }
                     }
                 }
             }

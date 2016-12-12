@@ -90,12 +90,13 @@ html
             .content-left
                .network-nav
                   block network-nav
-                     h3(style='margin-left: 20px;') #{title}
+                     input(id='tit',value='#{title}' type='hidden')
+                     h3(style='margin-left: 20px;')
                .network-content
                   .main_btns
-                  .content_container(style='height: 662px;')
-                     ul.content_layout.content_main
-                        block content
+                     block main_btn
+                  .content_container(style='height: 100%;')
+                     block content
 
 
 

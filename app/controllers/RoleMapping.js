@@ -5,7 +5,6 @@ var request = require('request');
 var RoleMapp = require('../models/RoleMapping');
 var Mapp =  require('../models/Mapping');
 var OrganPos = require('../models/OrganPos');
-var OrganRole = require('../models/OrganRole');
 var BusiRole = require('../models/BusinessRole');
 var HashMap = require('../models/HashMap.js');
 
@@ -39,7 +38,7 @@ exports.showRoleMapping = function (req,res) {
                         }
                         if( busiRoles ) {
                             res.render('ShowRoleMapping',{
-                                title:'映射关系显示页',
+                                title:'映射关系显示页|整体映射关系显示',
                                 organPos:organpos,
                                 busiRoles:busiRoles,
                                 idMap: idMap
@@ -296,7 +295,7 @@ exports.organRoleMappingList = function (req,res) {
     var _appName = req.params.appName;
     var _organRoleName = req.params.organRoleName;
     var _userId = req.session.user._id.toString();
-    var _role2PosMapping = new HashMap();
+    var _role2PosMapping = new Array();
     // 根据应用名获取应用角色列表
     BusiRole.find({appName:_appName}, function (error,busiRoles) {
         if (error) {
@@ -357,8 +356,8 @@ exports.organRoleMappingList = function (req,res) {
                                     organRoleP.isMapped = true;
                                     theNumOfMapped++; // 记录该组织角色包含的职位被映射的次数
                                     organRolePosMap.put(organRoleP._id.toString(),organRoleP); // 改变映射值再放入map中
-                                    var key = busiRoles[index]._id.toString()+appRoleMappings[j].organPosId.toString();// key为业务角色id和组织职位id
-                                    _role2PosMapping.put(key,appRoleMappings[j]); // 存在map中方便之后更新关系时的查找
+
+                                    _role2PosMapping.push(appRoleMappings[j]);    // 存在map中方便之后更新关系时的查找
                                 }
                                 // 若该业务角色所映射的职位不在该组织角色所包含的范围内则不做任何事情
                             }
@@ -374,6 +373,116 @@ exports.organRoleMappingList = function (req,res) {
                             res.render('EditOrganRoleMappingList',{
                                 title: _organRoleName+"的映射编辑",
                                 organRole2busiRoleLists: organRole2busiRoleListMapped,
+                                role2PosMapping: _role2PosMapping,
+                                mapId: _mapId
+                            })
+                        }
+                        index ++;
+                    });
+                }
+
+            }
+        })
+
+    });
+};
+
+// 组织部门与应用角色的映射关系的查询  // 与组织角色与应用角色的映射关系类似
+/*逆向查询 所有应用角色->部门对应的职位->部门所拥有的职位与应用角色的映射关系（1：n）HashMap->部门所拥有的职位与所有应用角色的映射关系
+1、先根据应用名称查询所对应的应用角色列表
+2、根据部门名称与用户名查询该部门所拥有的所有职位
+3、遍历应用角色并查询应用角色的映射关系得到与该应用角色映射的职位列表
+4、遍历应用角色与职位所有的映射关系，如果该职位存在于部门职位列表中则标记为已映射，否则标记为未映射
+5、当所有的部门职位列表都在改应用角色已映射的职位列表中则将该应用角色标记为已映射，否则标记为未映射
+6、同时记录该部门拥有的所有的职位与应用角色已有的映射关系
+ */
+/*
+return 值：organDep2busiRoleLists<Object>
+Object: id: 应用角色id、name:应用角色名称,organDepPosList:组织部门所有的职位列表对象集，isMapped:是否与该部门映射
+ organDepPosList：isMapped：是否与该应用角色映射，organPos：组织部门所有的职位列表集
+ */
+exports.organDepMappingList = function ( req,res) {
+    var _mapId = req.params.mapId;
+    var _appName = req.params.appName;
+    var _organDepName = req.params.organDepName;
+    var _userId = req.session.user._id.toString();
+    var _role2PosMapping = new Array();
+    // 根据应用名获取应用角色列表
+    BusiRole.find({appName:_appName}, function (error,busiRoles) {
+        if (error) {
+            console.log("controller:roleMapping,methodName:organDepMappingList" + error);
+            res.render('Error', {
+                message: "应用名称：" + _appName + "数据库读取出错！</br>" + error
+            })
+        }
+        if (busiRoles == null || busiRoles.length == 0) {
+            console.log("controller:roleMapping,methodName:organDepMappingList" + _appName + "业务角色为空");
+            res.render('Error', {
+                message: "应用名称：" + _appName + "未添加任何业务角色！</br>" + error
+            })
+        }
+        // 根据组织部门名称获取所有的相关的组织职位
+        OrganPos.find({depName:_organDepName,userId:_userId},function(err,organDepPos){
+            if ( err ) {
+                console.log("controller:roleMapping,methodName:organDepMappingList" + err);
+                res.render('Error', {
+                    message: error
+                })
+            }
+            // 遍历所有的业务角色，并查找该组织部门所包含的职位与业务角色之间的关系
+            if ( organDepPos != null && organDepPos.length>0 ) {
+                var organDep2busiRoleListMapped =  new Array(); // 返回的业务角色对应的职位映射信息集合
+                var index =0;
+                var busiRolesLen = busiRoles.length;
+                for ( var i=0; i<busiRolesLen ; i++ ) {
+                    // 根据业务角色查找映射关系
+                    RoleMapp.find({mapId:_mapId,busiRoleName:busiRoles[i].name},function(error,appRoleMappings){
+                        if (error) {
+                            console.log("controller:roleMapping,methodName:organDepMappingList" + error);
+                            res.render('Error', {
+                                message: "应用角色：" + _appName + "数据库读取出错！</br>" + error
+                            })
+                        }
+                        var organDepPosLen = organDepPos.length;
+                        var busiRoleMapp = new Object(); // 建立新的业务角色对象：包含id，name，组织角色包含的职位
+                        busiRoleMapp['_id'] = busiRoles[index]._id.toString();
+                        busiRoleMapp['busiRoleName'] = busiRoles[index].name;
+                        var organDepPosMap = new HashMap(); // 将该组织部门所包含的职位放入map中，方便后续查找
+                        for ( var k =0; k < organDepPosLen ;k++) { // 重新构造新的组织职位对象，并将组织职位信息放入hashmap中
+                            var organDep2Pos = new Object(); // 建立信息组织职位对象，包含属性:职位id，name,与该业务角色的映射关系
+                            organDep2Pos["_id"] = organDepPos[k]._id.toString();
+                            organDep2Pos['posName'] = organDepPos[k].posName;
+                            organDep2Pos['roleName'] = organDepPos[k].roleName;
+                            organDep2Pos['isMapped'] = false; // 初始构造默认为未与业务角色映射
+                            organDepPosMap.put(organDepPos[k]._id.toString(),organDep2Pos);
+                        }
+                        // 若该业务角色存在映射关系，则查找该业务角色与该组织部门所包含的职位之间的映射关系
+                        if( appRoleMappings !=null && appRoleMappings.length >0 ) {
+                            var theNumOfMapped =0; // 记录该组织角色包含的职位被映射的次数
+                            // 遍历该业务角色的映射关系
+                            for ( var j =0; j<appRoleMappings.length; j++ ) {
+                                if ( organDepPosMap.get(appRoleMappings[j].organPosId.toString())) { // 如果该业务角色与该组织角色所包含的职位之间存在映射关系
+                                    // 记录该映射关系
+                                    var organDep = organDepPosMap.get(appRoleMappings[j].organPosId.toString());
+                                    organDep.isMapped = true;
+                                    theNumOfMapped++;
+                                    organDepPosMap.put(organDep._id.toString(),organDep); // 改变映射值再放入map中
+                                    _role2PosMapping.push(appRoleMappings[j]);    // 存储映射关系，并返回方便之后更新关系
+                                }
+                                // 若该业务角色所映射的职位不在该组织部门所包含的职位集合内则不做任何事情
+                            }
+                            busiRoleMapp['isMapped'] = theNumOfMapped == organDepPosLen;// 若该组织部门所有的职位都被该业务角色所映射则mapped的值为true，否则为false
+                            busiRoleMapp['organDepPosList'] = organDepPosMap.toArray(); // 将map转成数组放入该业务角色的属性中
+
+                        } else { // 否则直接将该组织角色所包含的职位放入该业务角色中标记为未映射
+                            busiRoleMapp['isMapped']= false;
+                            busiRoleMapp['organDepPosList'] = organDepPosMap.toArray();
+                        }
+                        organDep2busiRoleListMapped.push(busiRoleMapp);
+                        if ( index == busiRolesLen -1 ) {
+                            res.render('EditOrganDepMappingList',{
+                                title: _organDepName+"的映射编辑",
+                                organDep2busiRoleLists: organDep2busiRoleListMapped,
                                 role2PosMapping: _role2PosMapping,
                                 mapId: _mapId
                             })
@@ -509,6 +618,65 @@ exports.addOrganPosMapping = function (req,res,next ) {
             console.log(rolemap);
         });
         i++;
+    }
+    next();
+};
+
+// 组织角色与业务角色映射的更新
+exports.updateOrganMapping = function ( req,res,next ) {
+    var role2PosOldString = req.params.role2PosOldString;
+    var role2PosNewString = req.params.role2PosNewString;
+    var role2PosOldObj = JSON.parse(role2PosOldString);
+    var role2PosNewObj = JSON.parse(role2PosNewString);
+    var role2PosOldMap = new HashMap();
+    if ( role2PosOldObj!= null && role2PosOldObj.length > 0 ) {
+        for (var j = 0; j < role2PosOldObj.length;j++ ) {
+            var oldKey = role2PosOldObj[j].busiRoleId+role2PosOldObj[j].organPosId; // map 的Key值为业务角色id和组织职位id
+            role2PosOldMap.put(oldKey,role2PosOldObj[j]);  // 将来原组织角色映射关系放入hashmap中便于之后的查找
+        }
+    }
+    for ( var i=0;i<role2PosNewObj.length;i++) {
+        var isExist = false;
+        var newKey = role2PosNewObj[i].busiRoleId+role2PosNewObj[i].organPosId;
+        if ( role2PosOldMap.get(newKey) )  {  // 如果该映射之前存在
+            role2PosOldMap.remove(newKey);
+            isExist = true;
+        }
+        if ( !isExist ) { // 如果该映射之前不存在
+            roleMap = new RoleMapp(role2PosNewObj[i]);
+            roleMap.save(function (error,roleMap){
+                if ( error) {
+                    console.log("controller:roleMapping,methodName:updateOrganRoleMapping"+error);
+                    res.render('Error',{
+                        message:"controller:roleMapping,methodName:updateOrganRoleMapping存入数据库出错！</br>"+error
+                    })
+                }
+                if ( roleMap) {
+                    console.log(roleMap);
+                }
+            })
+        }
+    }
+    try {
+        var role2PosOldArray = role2PosOldMap.toArray();
+    } catch( e) {
+        next();
+        console.log(e);
+    }
+    if ( role2PosOldArray!=null && role2PosOldArray.length  > 0  ) {  // 若旧的映射存在，而在新的映射中不存在，则删除该映射
+        for ( var k = 0;k<role2PosOldArray.length;k++) {
+            RoleMapp.remove({_id:role2PosOldArray[k]._id.toString()},function(err,rolemap){
+                if ( err) {
+                    console.log("controller:roleMapping,methodName:updateOrganRoleMapping"+err);
+                    res.render('Error',{
+                        message:"controller:roleMapping,methodName:updateOrganRoleMapping存入数据库出错！</br>"+err
+                    })
+                }
+                if ( rolemap) {
+                    console.log(rolemap+"removed");
+                }
+            })
+        }
     }
     next();
 };

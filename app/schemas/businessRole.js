@@ -2,7 +2,7 @@
  * Created by yuzaizai on 2016/5/24.
  */
 var mongoose = require('mongoose');
-//2¡¢¶¨ÒåÄãµÄÊı¾İÄ£ĞÍ(Ò²¾ÍÊÇÎÒÃÇÔÚ¹ØÏµÊı¾İ¿âÖĞ¶¨ÒåµÄTable)
+//2ã€å®šä¹‰ä½ çš„æ•°æ®æ¨¡å‹(ä¹Ÿå°±æ˜¯æˆ‘ä»¬åœ¨å…³ç³»æ•°æ®åº“ä¸­å®šä¹‰çš„Table)
 var BusiRoleSchema = new mongoose.Schema({
     name : String,
     proper: String,

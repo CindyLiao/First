@@ -4,17 +4,23 @@ block head
    title 映射关系显示
    link(type="text/css",rel='stylesheet',href='/stylesheets/ShowRoleMapping.css')
    script(type='text/javascript',charset='UTF-8',src='/js/ShowRoleMapping.js')
+block main_btn
 block content
-   .container
-      button.button-border-thick(style='margin-left: 10px;') 组织职位列表
-      .container-left
+   .con-show
+      .con-head
+         button.button-border-thin.button-large(style='margin-left: 100px;') 组织职位列表
+         button.button-raised.button-pill.button-inverse(style='margin-left: 12px;' , onclick='partialMapping();') 查看整体映射关系
+         button.button-border-thin.button-large(style='margin-left:20px;') 业务角色列表
+         br
+      .con-left
          input(name="rolemapps",id="rolemapps", type="hidden" ,value='#{JSON.stringify(idMap)}')
          each pos in organPos
-            .organPosItem.font(id="#{pos._id}" ,type="button") #{pos.posName} #{pos.depName} #{pos.roleName}
-      button.button-border-thick(style='margin-left: 240px;') 业务角色列表
-      .container-right
-         each busiRole in busiRoles
-            .busiRoleItem.font(id="#{busiRole._id}" ,type="button") #{busiRole.name}
+            button.button-glow.button-border.button-rounded.button-primary.organPosItem(id="#{pos._id}" ,type="button" ) #{pos.posName} #{pos.depName} #{pos.roleName}
+            br
+
+      each busiRole in busiRoles
+         button.button-glow.button-border.button-rounded.button-primary.busiRoleItem(id="#{busiRole._id}" ,type="button" ) #{busiRole.name}
+         br
 
 
 
