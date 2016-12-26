@@ -1,0 +1,55 @@
+//
+   Created by yuzaizai on 2016/12/19.
+
+extends  ../userLayout
+
+block content
+   .container
+      .row
+         form(method="POST", action="",id="getCollabUserForm")
+            table
+               tr
+                  td:.font &nbsp;&nbsp;&nbsp;获取协作用户URI: &nbsp;
+                  if user.collabUserUri
+                     td(width="300px"): input#collabUserUri.form-control(name="user[collabUserUri]", type="text",value="#{user.collabUserUri}")
+                  else
+                     td(width="300px"): input#collabUserUri.form-control(name="user[collabUserUri]", type="text",value="")
+                  td: button.btn.btn-default(type="button", onclick="location.href='/map/userMappings'" ) 返回
+                  td: button.btn.btn-success(type="button",onclick="registerCollabUser();") 获取用户
+                  if user.collabUserUri
+                     td: button.btn.btn-warning(type = "button", onclick="updateCollabUserList();") 刷新
+      if empList
+         form(method="POST", action="",id="registerCollabUserForm")
+            table.table.table-hover.table-bordered(id="registerCollabUserTable")
+               thead
+                  tr
+                     th: input.form-control(name="iCheck",type="checkbox",id="checkAll",onclick="selectAll();",value='0')
+                     th 员工名称
+                     th 职位名称
+                     th 所属部门
+                     th 所属角色
+               tbody
+                  each emp in empList
+                     if emp.position && emp.position.length >0
+                        tr
+                           td(rowspan="#{emp.position.length}"): input.form-control(name="iCheck",type="checkbox",value="")
+                           td(rowspan="#{emp.position.length}") #{emp.name}
+                           td #{emp.position[0].posName}
+                           td #{emp.position[0].depName}
+                           td #{emp.position[0].roleName}
+                        if emp.position.length >1
+                           script.
+                              emp.position.splice(0,1);
+                           each pos in emp.position
+                              tr
+                                 td
+                                 td
+                                 td #{pos.posName}
+                                 td #{pos.depName}
+                                 td #{pos.roleName}
+
+
+
+
+
+   script(type='text/javascript',charset='UTF-8',src='/js/showCollaboration.js')

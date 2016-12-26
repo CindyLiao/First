@@ -2,14 +2,15 @@
  * Created by yuzaizai on 2016/4/17.
  */
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt-node'); //ÃÜÂë´æ´¢µÄ¿â
+var bcrypt = require('bcrypt-node'); //å¯†ç å­˜å‚¨çš„åº“
 var SALT_WORK_FACTOR = 10;
-//¹şÏ£¼ÓÑÎ²»¿ÉÄæ
+//å“ˆå¸ŒåŠ ç›ä¸å¯é€†
 var UserSchema = new mongoose.Schema({
     name: {
         unique: true,
         type: String
     },
+    empId: String,
     password: String,
     level: {
         type: Number,
@@ -17,8 +18,10 @@ var UserSchema = new mongoose.Schema({
     },
     type: {
         type:String,
-        default: "ÆÕÍ¨ÓÃ»§"
+        default: "user"
     },
+    belongTo: String,
+    collabUserUri: String,
     meta: {
         createAt: {
             type: Date,
@@ -33,20 +36,17 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', function(next) {
     var user = this;
-
     if (this.isNew) {
         this.meta.createAt = this.meta.updateAt = Date.now()
     }
     else {
         this.meta.updateAt = Date.now()
     }
-//salt_work_factor ¼ÓÑÎÇ¿¶È
+//salt_work_factor åŠ ç›å¼ºåº¦
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if (err) return next(err);
-
         bcrypt.hash(user.password, salt,null, function(err, hash) {
             if (err) return next(err);
-
             user.password = hash;
             next()
         })
@@ -56,7 +56,7 @@ UserSchema.pre('save', function(next) {
 UserSchema.methods = {
     comparePassword: function(_password, cb) {
         bcrypt.compare(_password, this.password, function(err, isMatch) {
-            if (err) return cb(err)
+            if (err) return cb(err);
             cb(null, isMatch)
         })
     }

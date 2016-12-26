@@ -9,15 +9,16 @@ block content
       $(".network-menu[tit=mapping] .nav-icons").addClass("ac");
    .container
       .row
-         form(method="GET", action="/map/showRegisterMapping",id = "registerForm")
+         form(method="POST",id = "registerForm")
             .content-left(style='overflow:hidden;')
                .network-nav
-               .network-nav-items.active( tit='all',onclick="registerForm.submit();")
+               .network-nav-items.active( tit='all',onclick="registerForm();")
                   span.nav-icons.myfile
                   span.nav-item-title  新建映射
-               .network-nav-items(tit='collaboration', onclick="DM.load({resource: 'collaboration', page: 1})")
-                  span.nav-icons.mycola
-                  span.nav-item-title 与我协作的
+               if user.type == 'admin'
+                  .network-nav-items(tit='collaboration', onclick="collaborationForm();")
+                     span.nav-icons.mycola
+                     span.nav-item-title 添加协作人
                .network-nav-items(tit='fav', onclick="DM.load({resource: 'fav', page: 1})")
                   span.nav-icons.mylike
                   span.nav-item-title 我的收藏

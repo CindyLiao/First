@@ -12,9 +12,7 @@ exports.addBusiRole = function(req,res) {
     request.get({url:appli.uri},function(error,roleNames){
 
         console.log(roleNames.body);
-
         var body = roleNames.body;
-
         var obj = JSON.parse(body);
         var len = obj.roles.length;
         var i=0;
@@ -24,12 +22,22 @@ exports.addBusiRole = function(req,res) {
             busirole.appName = appli.appName;
             busirole.userId = userId;
             _busiRoles.push(busirole);
-            busirole.save(function (error, bs) {
-                if (error) {
-                    console.log(error);
-                }
-                console.log(bs);
+            BusiRole.find({userId:userId,appName:appli.appName,name:busirole.name},function (error,busiRole){ //查找该业务角色是否已经存在
+               if ( error ) {
+                    res.render('Error',{
+                        message:"数据库查询出错！"+error
+                    })
+               }
+               if (busiRole == null || busiRole.length==0 ) {  // 若业务角色不存在，则存储
+                   _busiRoles.save(function (error, bs) {
+                       if (error) {
+                           console.log(error);
+                       }
+                       console.log(bs);
+                   });
+               }
             });
+
         }
         res.render('BusiRoleList',{
             roles:_busiRoles

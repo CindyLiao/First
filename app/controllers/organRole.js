@@ -4,6 +4,8 @@
 var OrganRole = require('../models/OrganRole');
 var Organ = require('../models/Organization');
 var request = require('request');
+
+
 exports.addOrganRole = function(req,res) {
     var organ = req.session.organization;
     var userId = req.session.user._id.toString();

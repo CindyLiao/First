@@ -56,3 +56,10 @@ exports.showRegisterMapping = function(req,res) {
         })
     })
 };
+
+// 添加协作人员
+exports.showCollaboration = function (req,res) {
+    res.render('showCollaboration', {
+        title: "添加协作人"
+    })
+};
