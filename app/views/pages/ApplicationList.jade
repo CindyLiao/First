@@ -30,7 +30,7 @@ block content
                      td #{appli.account}
                      td #{appli.accessPwd}
                      td #{moment(appli.meta.updateAt).format('MM/DD/YYYY')}
-                     td: a(target="_blank",href="/busirole/busiroleList/#{appli.appName}") 查看组织角色
+                     td: a(target="_blank",href="/busirole/busiroleList/#{appli.appName}") 查看业务角色
                      td: a(target="_blank",href="../appli/update/#{appli._id}") 修改
                      td
                         button.btn.btn-danger.del(type="button", data-id="#{appli._id}") 删除

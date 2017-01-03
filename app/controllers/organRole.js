@@ -21,7 +21,7 @@ exports.addOrganRole = function(req,res) {
             var index = 0; // 记录save函数执行完多少次。
             for(;i<len;i++) {    // json获取组织角色列表，json格式必须为roles：{roleName：}
                 var organrole = new OrganRole();
-                organrole.roleId = obj.roles[i].roleId;
+                organrole.roleId = obj.roles[i].id;
                 organrole.name = obj.roles[i].roleName;
                 organrole.organName = organ.organName;
                 organrole.userId = userId;

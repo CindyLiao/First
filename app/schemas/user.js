@@ -17,8 +17,7 @@ var UserSchema = new mongoose.Schema({
         default: 1
     },
     type: {
-        type:String,
-        default: "user"
+        type:String
     },
     belongTo: String,
     collabUserUri: String,

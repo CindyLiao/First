@@ -16,6 +16,7 @@ var cookieSession = require('cookie-session');
 app.locals.moment = require('moment');
 var logger = require('morgan');
 
+
 //连接数据库
 mongoose.connect('mongodb://localhost/mapping');
 
@@ -40,5 +41,4 @@ if ('development' === app.get('env')) {
 }
 
 require('./routes/routes')(app);
-
 console.log('start on port'+port);

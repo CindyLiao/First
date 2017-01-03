@@ -5,7 +5,7 @@ var User = require('../models/User');
 var request = require('request');
 var CryptoJS = require('crypto-js');
 var OrganPos = require('../models/OrganPos');
-
+var Cache = require('memory-cache');
 //show Signup
 exports.showSignup = function(req,res) {
     res.render('Signup',{
@@ -88,8 +88,7 @@ exports.signinRequired = function(req, res, next) {
 };
 exports.adminRequired = function(req, res, next) {
     var user = req.session.user;
-
-    if (user.role <= 10) {
+    if (user.type != "admin") {
         return res.redirect('/signin')
     }
     next()
@@ -135,7 +134,7 @@ exports.getCollabUser = function(req,res) {
             }
             if (user) {
                 request.get({url:_collabUserUri},function (err, EmpList) {
-                    if (err) {
+                    if (err || !EmpList.hasOwnProperty("body")) {
                         res.render('Error',{
                             message:_collabUserUri+"用户信息读取出错！"+err
                         })
@@ -147,10 +146,11 @@ exports.getCollabUser = function(req,res) {
                         var _index =0;
                         var _empLen = empObjects.employees.length;
                         for ( var i=0; i < _empLen ; i++ ) {
-                            OrganPos.find({empId:empObjects.employees[_index].empId},function(error,positions) {
+                            OrganPos.find({empId:empObjects.employees[_index].id},function(error,positions) {
                                 var _userNew = new Object();
                                 _userNew.name = empObjects.employees[_index].name;
-                                _userNew.empId = empObjects.employees[_index].empId;
+                                _userNew.empId = empObjects.employees[_index].id;
+                                _userNew.password = empObjects.employees[_index].password;
                                 _userNew.belongTo = _user._id.toString();
                                 if (error) {
                                     res.render('Error',{
@@ -177,14 +177,64 @@ exports.getCollabUser = function(req,res) {
     }
 };
 
+// admin 添加协作用户
 exports.registerCollabUser = function (req,res) {
+    var _empList = JSON.parse(req.params.empList);
+    if ( _empList !=null && _empList.length > 0 ) {
+        var index = 0;
+        for ( var i=0; i < _empList.length; i++ ) {
+            var pwd =   decrypt(_empList[i].password);
+           var _user = new User({
+               name: _empList[i].name,
+               empId: _empList[i].empId,
+               belongTo: _empList[i].belongTo,
+               password: pwd,
+               type: "user"
+           });
+           _user.save(function(error,user){
+               err(error,"用户信息存储失败！");
+               if( user ) {
+                   if ( index == _empList.length-1 ) {
+                      res.redirect('/admin/showCollaboration');
+                   }
+                   index++;
+               }
+           })
+        }
+    }
+};
+
+// 添加协作人员
+exports.showCollaboration = function (req,res) {
+    var _user = req.session.user;
+    User.find({belongTo:_user._id.toString()}, function(error,users){  // 查询已有的协作人
+        err(error,"用户查询出错！"+error);
+        if ( users ) {
+            res.render('showCollaboration', {
+                title: "添加协作人",
+                addedCollabUser: users
+            })
+        }
+    });
+
+};
+
+function decrypt ( enStr ) {
     var keyHex = CryptoJS.enc.Utf8.parse("127.0.0.1");  // 密钥127.0.0.1
-// direct decrypt ciphertext
+    // direct decrypt ciphertext
     var decrypted = CryptoJS.DES.decrypt({  // 解密
-        ciphertext: CryptoJS.enc.Base64.parse(empObjects.employees[i].password)
+        ciphertext: CryptoJS.enc.Base64.parse(enStr)
     }, keyHex, {
         mode: CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7
     });
-    _userNew.password = decrypted.toString(CryptoJS.enc.Utf8);
-};
+    return  decrypted.toString(CryptoJS.enc.Utf8);
+}
+
+function err ( error,message ) {
+    if ( error != null ) {
+        res.render('Error',{
+            message: message+error
+        })
+    }
+}

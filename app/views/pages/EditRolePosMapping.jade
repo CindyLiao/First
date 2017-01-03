@@ -7,25 +7,25 @@ block organ
       .col-md-12.column
          ul.nav.nav-tabs
             li.active
-               a(href='#') Ê×Ò³
+               a(href='#') é¦–é¡µ
             li
-               a(href='#') ¼ò½é
+               a(href='#') ç®€ä»‹
             li
-               a(href='#') ĞÅÏ¢
+               a(href='#') ä¿¡æ¯
 
-   label.btn-success ×éÖ¯Ö°Î»
-   label.h4 Ó³ÉäÎ¬¶ÈÑ¡Ôñ
+   label.btn-success ç»„ç»‡èŒä½
+   label.h4 æ˜ å°„ç»´åº¦é€‰æ‹©
    select#mapscope
-      option(value='position',selected='selected') ×éÖ¯Ö°Î»
-      option(value='department') ×éÖ¯²¿ÃÅ
-      option(value='role') ×éÖ¯½ÇÉ«
+      option(value='position',selected='selected') ç»„ç»‡èŒä½
+      option(value='department') ç»„ç»‡éƒ¨é—¨
+      option(value='role') ç»„ç»‡è§’è‰²
    form(method="POST", action="organPos" ,id="editOrganPosForm")
       table.table.table-hover.table-bordered(id="editPosTable",type="hidden")
          thead
             tr
-               th ×éÖ¯Ö°Î»Ãû
-               th ËùÊô²¿ÃÅ
-               th ËùÊô½ÇÉ«
+               th ç»„ç»‡èŒä½å
+               th æ‰€å±éƒ¨é—¨
+               th æ‰€å±è§’è‰²
          tbody
             each position in organPos
                tr(class="item-id-#{position._id}")

@@ -5,7 +5,7 @@ extends ../userLayout
 block content
    .container
       .row
-         table.table.table-hover.table-bordered
+         table#organDepListTable.table.table-hover.table-bordered
             thead
                tr
                   th 组织部门名
@@ -16,3 +16,13 @@ block content
                      td #{depart.depName}
                      td
                         button.btn.btn-danger.del(type="button", data-id="#{depart._id}") 刷新
+         ul(id="dep")
+   script(src='/js/socket.io.js')
+   script.
+      var socket = io.connect('http://localhost');
+      socket.on('news', function (data) {
+         alert(data.hello);
+         console.log(data);
+         socket.emit('my other event', { my: 'data' });
+      });
+   script(src='/js/OrganDepList.js',type='text/javascript',charset='utf-8')

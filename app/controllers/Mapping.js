@@ -47,19 +47,12 @@ exports.registerMapping = function(req,res) {   // 映射的注册，目前规�
 
 exports.showRegisterMapping = function(req,res) {
     var userId = req.session.user._id.toString();
-    Appli.find({userId:userId},function(err,applis){
+    Appli.find({userId:userId},function(err,applis) {
         if(err) {
             console.log("showRoleMapping.js:showRegisterMapping"+err);
         }
         res.render('RegisterMapping',{
             applis:applis
         })
-    })
-};
-
-// 添加协作人员
-exports.showCollaboration = function (req,res) {
-    res.render('showCollaboration', {
-        title: "添加协作人"
     })
 };

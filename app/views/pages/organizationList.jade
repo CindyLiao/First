@@ -10,19 +10,20 @@ block network-nav
 block content
    form(method="GET", action="",id = "registerOrganInfoForm")
       .content-left(style='overflow:hidden;')
-         .network-nav
-         .network-nav-items.active( tit='all',onclick="registerOrgan();")
-            span.nav-icons.myfile
-            span.nav-item-title  注册组织信息
-         .network-nav-items(tit='collaboration', onclick="editOrgan();")
-            span.nav-icons.mycola
-            span.nav-item-title 编辑组织信息
-         .network-nav-items(tit='fav', onclick="")
-            span.nav-icons.mylike
-            span.nav-item-title 我的收藏
-         .network-nav-items(tit='history', onclick="")
-            span.if.if-history.myhistory
-            span.nav-item-title 最近修改
+         if user.type == "admin"
+            .network-nav
+            .network-nav-items.active( tit='all',onclick="registerOrgan();")
+               span.nav-icons.myfile
+               span.nav-item-title  注册组织信息
+            .network-nav-items(tit='collaboration', onclick="editOrgan();")
+               span.nav-icons.mycola
+               span.nav-item-title 编辑组织信息
+            .network-nav-items(tit='fav', onclick="updateOrganResource();")
+               span.nav-icons.mylike
+               span.nav-item-title 刷新组织信息
+            .network-nav-items(tit='history', onclick="")
+               input(type="checkbox")
+               span.nav-item-title 同步更新
 
    table.table.table-hover.table-bordered(id="organListTable1")
       thead
@@ -42,10 +43,14 @@ block content
                td #{organ.roleUri}
                td #{organ.depUri}
                td #{moment(organ.meta.updateAt).format('YYYY/MM/DD')}
-               td: a(target="_blank",href="/organpos/organPosList/#{organ.organName}") 查看职位
-                   a(target="_blank",href="/organrole/organRoleList/#{organ.organName}") 查看角色
-                   a(target="_blank",href="/organdep/organDepList/#{organ.organName}") 查看部门
-               td
-                  button.btn.btn-danger.del(type="button", data-id="#{organ._id}") 删除
+               if user.type == "admin"
+                  td: a(target="_blank",href="/organpos/organPosList/#{organ.organName}") 查看职位
+                      a(target="_blank",href="/organrole/organRoleList/#{organ.organName}") 查看角色
+                      a(target="_blank",href="/organdep/organDepList/#{organ.organName}") 查看部门
+                  td
+                     button.btn.btn-danger.del(type="button", data-id="#{organ._id}") 删除
+               else
+                  td
+                  td
 
    script(src="/js/OrganizationList.js")

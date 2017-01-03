@@ -9,7 +9,7 @@ block content
          form(method="POST", action="",id="getCollabUserForm")
             table
                tr
-                  td:.font &nbsp;&nbsp;&nbsp;获取协作用户URI: &nbsp;
+                  td: .font &nbsp;&nbsp;&nbsp;获取协作用户URI: &nbsp;
                   if user.collabUserUri
                      td(width="300px"): input#collabUserUri.form-control(name="user[collabUserUri]", type="text",value="#{user.collabUserUri}")
                   else
@@ -18,12 +18,23 @@ block content
                   td: button.btn.btn-success(type="button",onclick="registerCollabUser();") 获取用户
                   if user.collabUserUri
                      td: button.btn.btn-warning(type = "button", onclick="updateCollabUserList();") 刷新
+      if addedCollabUser
+         table.table.table-hover.table-bordered(id="showCollabUserTable")
+            thead
+               tr
+                  th 员工Id
+                  th 员工名称
+            tbody
+               each user in addedCollabUser
+                  tr
+                     td #{user.empId}
+                     td #{user.name}
       if empList
          form(method="POST", action="",id="registerCollabUserForm")
             table.table.table-hover.table-bordered(id="registerCollabUserTable")
                thead
                   tr
-                     th: input.form-control(name="iCheck",type="checkbox",id="checkAll",onclick="selectAll();",value='0')
+                     th: input.form-control(type="checkbox",id="checkAll",onclick="selectAll();",value='0')
                      th 员工名称
                      th 职位名称
                      th 所属部门
@@ -32,7 +43,7 @@ block content
                   each emp in empList
                      if emp.position && emp.position.length >0
                         tr
-                           td(rowspan="#{emp.position.length}"): input.form-control(name="iCheck",type="checkbox",value="")
+                           td(rowspan="#{emp.position.length}"): input.form-control(name="subCheck",type="checkbox", checked, value="#{JSON.stringify(emp)}")
                            td(rowspan="#{emp.position.length}") #{emp.name}
                            td #{emp.position[0].posName}
                            td #{emp.position[0].depName}
@@ -47,9 +58,7 @@ block content
                                  td #{pos.posName}
                                  td #{pos.depName}
                                  td #{pos.roleName}
-
-
-
-
-
+         .modal-footer
+            button.button-glow.button-border.button-rounded.button-primary(type="button",value="",id="",onclick="submitForm();") 提交
+            button.button-glow.button-border.button-rounded.button-action(type="button",onclick="location.href='/map/userMappings'" ) 返回
    script(type='text/javascript',charset='UTF-8',src='/js/showCollaboration.js')

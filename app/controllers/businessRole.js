@@ -10,7 +10,6 @@ exports.addBusiRole = function(req,res) {
     var userId = req.session.user._id.toString();
     var _busiRoles = new Array();
     request.get({url:appli.uri},function(error,roleNames){
-
         console.log(roleNames.body);
         var body = roleNames.body;
         var obj = JSON.parse(body);
