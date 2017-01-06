@@ -54,7 +54,7 @@ exports.showRoleMapping = function (req,res) {
 
 exports.selectShowRoleMapping = function (req,res) {
     var _mapId = req.params.mapId;  // 获取参数映射id
-    var idMap = new Array();
+    var idMap = new Array();  // 映射id
     var mappingArray = new Array();
     RoleMapp.find({mapId:_mapId},function(err,rolemapps){   // 查询映射关系
         if(err) {

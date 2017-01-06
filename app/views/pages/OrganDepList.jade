@@ -3,23 +3,25 @@
 
 extends ../userLayout
 block content
+   input(type="hidden",value="#{user._id}",id="userId")
    .container
       .row
          table#organDepListTable.table.table-hover.table-bordered
             thead
                tr
+                  th 部门ID
                   th 组织部门名
-                  th
             tbody
-               each depart in departments
-                  tr(class="item-id-#{depart._id}")
-                     td #{depart.depName}
-                     td
-                        button.btn.btn-danger.del(type="button", data-id="#{depart._id}") 刷新
+               if departments!=null && departments.length >0
+                  each depart in departments
+                     tr(class="item-id-#{depart._id}")
+                        td #{depart.depId}
+                        td #{depart.depName}
          ul(id="dep")
    script(src='/js/socket.io.js')
    script.
       var socket = io.connect('http://localhost');
+      var userId = document.getElementById("userId").value;
       socket.on('news', function (data) {
          alert(data.hello);
          console.log(data);

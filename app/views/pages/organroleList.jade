@@ -3,18 +3,29 @@
 
 extends ../userLayout
 block content
+   input(type="hidden",value="#{user._id}",id="userId")
    .container
       .row
-         table.table.table-hover.table-bordered
+         table.table.table-hover.table-bordered(id="organRoleListTable")
             thead
                tr
+                  th 组织ID
                   th 组织角色名
-                  th
 
             tbody
                each role in roles
-                  tr(class="item-id-#{role._id}")
+                  tr(id="#{role.roleId}")
+                     td #{role.roleId}
                      td #{role.name}
-                     td
-                        button.btn.btn-danger.del(type="button", data-id="#{role._id}") 刷新
+
    //-script(src="../js/Admin.js")
+   script(src='/js/socket.io.js')
+   script.
+      var socket = io.connect('http://localhost');
+      var userId = document.getElementById("userId").value;
+      socket.on('roles', function (data) {
+         document.getElementById(54).style.backgroundColor = 'green'
+            //   document.getElementById(54).('border-color','rgba(92, 184, 92, 1)');
+         console.log(data);
+      });
+   script(src='/js/OrganRoleList.js',type='text/javascript',charset='utf-8')
