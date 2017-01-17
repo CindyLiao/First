@@ -81,10 +81,11 @@ html
                span(style='display:block;padding-top:24px;')
                   span.nav-icons.friends
                   span.network-menu-title 我的应用
-            a.network-menu(href='', tit='invite', style='height: 100px;')
-               span(style='display:block;padding-top:24px;')
-                  span.nav-icons.message
-                  span.network-menu-title 统计
+            if user.type == 'admin'
+               a.network-menu(href='/map/statisticAnalysis', tit='statistic')
+                  span(style='display:block;padding-top:24px;')
+                     span.nav-icons.message
+                     span.network-menu-title 统计分析
 
          .network-right(style='width: 1760px; left: 130px;')
             .content-left

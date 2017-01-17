@@ -7,7 +7,16 @@ block content
         input(name="mapId",id="mapId", type="hidden" ,value='#{mapId}')
         input(name="organName",id="organName", type="hidden" ,value='#{organName}')
         input(name="appName",id="appName", type="hidden" ,value='#{appName}')
+        input(type="hidden",value="",id="updateOrganRoleData" )
+        input(type="hidden",value="",id="updateOrganPosData" )
+        input(type="hidden",value="",id="updateOrganDepData" )
+        input(type="hidden",value="#{user.type}",id="userType")
+        if user.type == "user" && user.hasOwnProperty("belongTo")
+            input(type="hidden",value="#{user.belongTo}",id="userId")
+        else
+            input(type="hidden",value="#{user._id}",id="userId")
         label.btn-success 应用角色
+
         form(method="POST", action="busiRole", id="editBusiRoleForm")
             table.table.table-hover.table-bordered(id="editBusiRoleTable")
                 thead
@@ -32,7 +41,7 @@ block content
                         th 所属角色
                 tbody
                     each position in organPos
-                        tr(class="item-id-#{position._id}")
+                        tr(class="item-id-#{position._id}",id="#{position.posId}")
                             td: button.button-glow.button-border.button-rounded.button-primary(name="organPos",data-id="#{position._id}",type="button",value="#{position.posName}",id="#{position._id}") #{position.posName}
                             td(id="dep#{position._id}")  #{position.depName}
                             td(id="role#{position._id}")  #{position.roleName}

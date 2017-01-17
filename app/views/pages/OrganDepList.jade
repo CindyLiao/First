@@ -4,6 +4,8 @@
 extends ../userLayout
 block content
    input(type="hidden",value="#{user._id}",id="userId")
+   input(type="hidden",value="#{user.type}",id="userType")
+   input(type="hidden",value="",id="updateData" )
    .container
       .row
          table#organDepListTable.table.table-hover.table-bordered
@@ -14,17 +16,8 @@ block content
             tbody
                if departments!=null && departments.length >0
                   each depart in departments
-                     tr(class="item-id-#{depart._id}")
+                     tr(class="item-id-#{depart._id}",id="#depart._id")
                         td #{depart.depId}
                         td #{depart.depName}
-         ul(id="dep")
-   script(src='/js/socket.io.js')
-   script.
-      var socket = io.connect('http://localhost');
-      var userId = document.getElementById("userId").value;
-      socket.on('news', function (data) {
-         alert(data.hello);
-         console.log(data);
-         socket.emit('my other event', { my: 'data' });
-      });
+
    script(src='/js/OrganDepList.js',type='text/javascript',charset='utf-8')

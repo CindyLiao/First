@@ -16,9 +16,7 @@ var UserSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
-    type: {
-        type:String
-    },
+    type: String,
     belongTo: String,
     collabUserUri: String,
     meta: {
@@ -57,6 +55,16 @@ UserSchema.methods = {
         bcrypt.compare(_password, this.password, function(err, isMatch) {
             if (err) return cb(err);
             cb(null, isMatch)
+        })
+    },
+    bcryptPassword: function(_password,cb) {
+        //salt_work_factor 加盐强度
+        bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+            if (err) return next(err);
+            bcrypt.hash(_password, salt,null, function(err, hash) {
+                if (err) return cb(err);
+                cb(null,hash);
+            })
         })
     }
 };

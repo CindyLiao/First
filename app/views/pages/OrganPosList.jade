@@ -3,6 +3,9 @@
 
 extends ../userLayout
 block content
+   input(type="hidden",value="#{user._id}",id="userId")
+   input(type="hidden",value="#{user.type}",id="userType")
+   input(type="hidden",value="",id="updateData" )
    .network-content
       .content-left
          table.table.table-hover.table-bordered(id="organPosListTable")
@@ -15,7 +18,7 @@ block content
                   th
                tbody
                   each position in positions
-                     tr(class="item-id-#{position._id}")
+                     tr(class="item-id-#{position._id}",id="#{position._id}")
                         td #{position.posName}
                         td #{position.organName}
                         td #{position.depName}

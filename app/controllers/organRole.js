@@ -136,6 +136,6 @@ exports.getAllRolesByOrganName = function( req,res ) {
                 message: error
             })
         }
-        res.json(organRoles);
+        res.json(organRoles);  // 返回json格式的数据
     })
 };

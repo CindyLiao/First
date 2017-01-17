@@ -537,14 +537,13 @@ exports.addBusiRoleMapping = function (req,res,next ) {
     var  string = req.params.mappedOrganPos;
     var _mappedOrganPos = JSON.parse( string );  // 将json字符串格式转换成对象
     var i =0 ; // 索引
-    while ( i < _mappedOrganPos.length) {  // 遍历该组织角色对象
+    _mappedOrganPos.forEach(function(item) {// 遍历该组织角色对象
         var roleMapp = new RoleMapp({
             mapId: _mapId,
-            organPosName: _mappedOrganPos[i].posName,
+            organPosName: item.posName,
             busiRoleName: _busiRoleName,
-            organPosId: _mappedOrganPos[i]._id.toString(),
-            busiRoleId: _busiRoleId,
-
+            organPosId: item._id.toString(),
+            busiRoleId: _busiRoleId
         });
         roleMapp.save( function(error,rolemap) {
             if ( error ) {
@@ -555,8 +554,7 @@ exports.addBusiRoleMapping = function (req,res,next ) {
             }
             console.log(rolemap);
         });
-        i++;
-    }
+    });
     next();
 };
 

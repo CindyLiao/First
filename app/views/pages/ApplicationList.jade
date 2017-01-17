@@ -4,34 +4,49 @@
 //
    Created by yuzaizai on 2016/5/27.
 extends ../userLayout
-block content
+block network-nav
    script(type='text/javascript').
       $(".network-menu[tit=applis]").addClass("active").siblings().removeClass("active");
       $(".network-menu[tit] .nav-icons").removeClass("ac");
       $(".network-menu[tit=applis] .nav-icons").addClass("ac");
-   .container
-      .row
-         table.table.table-hover.table-bordered
-            thead
-               tr
-                  th 应用名称
-                  th URI
-                  th 访问账号
-                  th 访问密码
-                  th 录入时间
-                  th 查看
-                  th 修改
-                  th 删除
-            tbody
-               each appli in applis
-                  tr(class="item-id-#{appli._id}")
-                     td #{appli.appName}
-                     td #{appli.uri}
-                     td #{appli.account}
-                     td #{appli.accessPwd}
-                     td #{moment(appli.meta.updateAt).format('MM/DD/YYYY')}
-                     td: a(target="_blank",href="/busirole/busiroleList/#{appli.appName}") 查看业务角色
-                     td: a(target="_blank",href="../appli/update/#{appli._id}") 修改
-                     td
-                        button.btn.btn-danger.del(type="button", data-id="#{appli._id}") 删除
-   script(src="../js/Admin.js")
+block content
+   form(method="GET", action="",id = "registerOrganInfoForm")
+      .content-left(style='overflow:hidden;')
+         .network-nav
+         .network-nav-items.active( tit='all',onclick="registerApp();")
+            span.nav-icons.myfile
+            span.nav-item-title  注册应用信息
+         .network-nav-items(tit='collaboration', onclick="")
+            span.nav-icons.mycola
+            span.nav-item-title 编辑信息
+         .network-nav-items(tit='fav', onclick="")
+            span.nav-icons.mylike
+            span.nav-item-title 刷新组织信息
+         .network-nav-items(tit='history', onclick="")
+            input(type="checkbox")
+            span.nav-item-title 同步更新
+
+   table.table.table-hover.table-bordered(id="ApplicationListTable")
+      thead
+         tr
+            th 应用名称
+            th URI
+            th 访问账号
+            th 访问密码
+            th 录入时间
+            th 查看
+            th 修改
+            th 删除
+      tbody
+         each appli in applis
+            tr(class="item-id-#{appli._id}")
+               td #{appli.appName}
+               td #{appli.uri}
+               td #{appli.account}
+               td #{appli.accessPwd}
+               td #{moment(appli.meta.updateAt).format('MM/DD/YYYY')}
+               td: a(target="_blank",href="/busirole/busiroleList/#{appli.appName}") 查看业务角色
+               td: a(target="_blank",href="../appli/update/#{appli._id}") 修改
+               td
+                  button.btn.btn-danger.del(type="button", data-id="#{appli._id}") 删除
+   script(src="/js/ApplicationList.js")

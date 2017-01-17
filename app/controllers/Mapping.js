@@ -4,6 +4,8 @@
 var Mapp = require('../models/Mapping');
 var Appli = require('../models/Application');
 var request = require('request');
+var OrganPos = require('../models/OrganPos');
+var RoleMapp = require('../models/RoleMapping');
 
 
 exports.selectMappingByUserId = function(req,res) {
@@ -56,3 +58,55 @@ exports.showRegisterMapping = function(req,res) {
         })
     })
 };
+
+// 统计映射量,admin用户
+exports.statistic = function ( req,res ) {
+    var _userId = req.session.user._id.toString();
+    OrganPos.find({userId:_userId},function(findErr,organPosList){
+        if ( findErr ) {
+            console.log("Mapping.js:statistic"+findErr);
+            res.render('Error',{
+                message: findErr
+            });
+        }
+        var i = 0;
+        var organPosMappCount = new Array();
+        organPosList.forEach(function(organPos) {
+            RoleMapp.find({organPosId:organPos._id.toString()},function(mapFindErr, roleMappList ){
+                if ( mapFindErr ) {
+                    console.log("Mapping.js:statistic"+mapFindErr);
+                    res.render('Error',{
+                        message: mapFindErr
+                    });
+                }
+                var posMappCount = new Object();
+                posMappCount["name"] = organPos.posName;
+                posMappCount["value"] = roleMappList != null && roleMappList.length > 0 ? roleMappList.length:0;
+                posMappCount["color"] = "#b5bcc5";
+                organPosMappCount.push(posMappCount);
+                i++;
+                if ( i == organPosList.length ) {
+                    var sortMapArray = organPosMappCount.sort(sortMethod);
+                    res.render('Statistic',{
+                        title:"映射统计信息",
+                        statisticData: sortMapArray
+                    })
+                }
+            });
+        });
+    });
+
+
+};
+
+// 根据映射关系分析组织关系
+exports.analysis = function ( req,res ) {
+    res.render('Statistic', {
+        title: "映射统计信息"
+    });
+};
+
+
+function sortMethod(a,b) { //定义array数组的排序方式，从大到小排序
+    return -(a.value - b.value);  // 若a 大于b 则返回小于0，则a出现在b前面
+}
