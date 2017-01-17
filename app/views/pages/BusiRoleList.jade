@@ -1,0 +1,19 @@
+//
+   Created by yuzaizai on 2016/9/29.
+
+extends ../userLayout
+block content
+   .container
+      .row
+         table.table.table-hover.table-bordered
+            thead
+               tr
+                  th 业务组织名称
+                  th
+            tbody
+               each role in roles
+                  tr(class="item-id-#{role._id}")
+                     td #{role.name}
+                     td
+                        button.btn.btn-danger.del(type="button", data-id="#{role._id}") 刷新
+   //-script(src="../js/Admin.js")

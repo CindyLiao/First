@@ -1,0 +1,23 @@
+//
+   Created by yuzaizai on 2016/11/23.
+
+extends ../userLayout
+block content
+   input(type="hidden",value="#{user._id}",id="userId")
+   input(type="hidden",value="#{user.type}",id="userType")
+   input(type="hidden",value="",id="updateData" )
+   .container
+      .row
+         table#organDepListTable.table.table-hover.table-bordered
+            thead
+               tr
+                  th 部门ID
+                  th 组织部门名
+            tbody
+               if departments!=null && departments.length >0
+                  each depart in departments
+                     tr(class="item-id-#{depart._id}",id="#depart._id")
+                        td #{depart.depId}
+                        td #{depart.depName}
+
+   script(src='/js/OrganDepList.js',type='text/javascript',charset='utf-8')

@@ -1,0 +1,29 @@
+
+//
+   Created by yuzaizai on 2016/5/29.
+
+extends ../userLayout
+block content
+   .container
+      .row
+         .col-md-5
+            form(method="POST", action="/app/appSignup")
+               .modal-body
+                  .form-group
+                     label(for="appName") 应用名
+                     input#organName.form-control(name="application[appName]", type="text")
+                  .form-group
+                     label(for="appUri") URI
+                     input#organUri.form-control(name="application[uri]",type="text")
+                  .form-group
+                     label(for="appAccount") 访问账号
+                     input#organUri.form-control(name="application[account]",type="text")
+                  .form-group
+                     label(for="accessPwd") 访问密码
+                     input#accessPwd.form-control(name="application[accessPwd]", type="password")
+                  .form-group
+                     input(name="application[userId]", type="hidden" ,value=user._id)
+               .modal-footer
+                  button.btn.btn-default(type="button", data-dismiss="modal") 关闭
+                  button.btn.btn-success(type="submit") 提交
+

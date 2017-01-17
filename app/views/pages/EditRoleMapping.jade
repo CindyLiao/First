@@ -1,0 +1,62 @@
+//
+   Created by yuzaizai on 2016/11/7.
+extends ../userLayout
+block head
+block content
+    .container
+        input(name="mapId",id="mapId", type="hidden" ,value='#{mapId}')
+        input(name="organName",id="organName", type="hidden" ,value='#{organName}')
+        input(name="appName",id="appName", type="hidden" ,value='#{appName}')
+        input(type="hidden",value="",id="updateOrganRoleData" )
+        input(type="hidden",value="",id="updateOrganPosData" )
+        input(type="hidden",value="",id="updateOrganDepData" )
+        input(type="hidden",value="#{user.type}",id="userType")
+        if user.type == "user" && user.hasOwnProperty("belongTo")
+            input(type="hidden",value="#{user.belongTo}",id="userId")
+        else
+            input(type="hidden",value="#{user._id}",id="userId")
+        label.btn-success 应用角色
+
+        form(method="POST", action="busiRole", id="editBusiRoleForm")
+            table.table.table-hover.table-bordered(id="editBusiRoleTable")
+                thead
+                    tr
+                        th 应用角色名
+                tbody
+                    each busiRole in busiRoles
+                        tr(class="item-id-#{busiRole._id}")
+                            td: button.button-glow.button-border.button-rounded.button-primary(name="busiRole",data-id="#{busiRole._id}",type="button",value="#{busiRole.name}",id="#{busiRole._id}") #{busiRole.name}
+        label#selectscope.btn-success 组织职位
+        label.strong.h4 映射维度选择
+        select#mapscope
+            option(selected='selected',value='position') 组织职位
+            option(value='department') 组织部门
+            option(value='role') 组织角色
+        form(method="POST", action="organPos" ,id="editOrganPosForm")
+            table.table.table-hover.table-bordered(id="editOrganPosTable")
+                thead
+                    tr
+                        th 组织职位名
+                        th 所属部门
+                        th 所属角色
+                tbody
+                    each position in organPos
+                        tr(class="item-id-#{position._id}",id="#{position.posId}")
+                            td: button.button-glow.button-border.button-rounded.button-primary(name="organPos",data-id="#{position._id}",type="button",value="#{position.posName}",id="#{position._id}") #{position.posName}
+                            td(id="dep#{position._id}")  #{position.depName}
+                            td(id="role#{position._id}")  #{position.roleName}
+        form(method="POST", action="organDep" ,id="editOrganDepForm")
+            table.table.table-hover.table-bordered(id="editOrganDepTable")
+                thead
+                    tr
+                        th _id
+                        th depName
+                tbody
+        form(method="POST", action="organRole" ,id="editOrganRoleForm")
+            table.table.table-hover.table-bordered(id="editOrganRoleTable")
+                thead
+                    tr
+                        th _id
+                        th name
+                tbody
+        script(type='text/javascript',charset='UTF-8',src='/js/EditRoleMapping.js')

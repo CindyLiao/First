@@ -1,0 +1,39 @@
+//
+   Created by yuzaizai on 2016/5/26.
+
+extends ../userLayout
+block content
+   input(type="hidden",value="#{user._id}",id="userId")
+   input(type="hidden",value="#{user.type}",id="userType")
+   input(type="hidden",value="",id="updateData" )
+   .container
+      .row
+         table.table.table-hover.table-bordered(id="organRoleListTable")
+            thead
+               tr
+                  th 组织ID
+                  th 组织角色名
+
+            tbody
+               each role in roles
+                  tr(id="#{role._id}")
+                     td #{role.roleId}
+                     td #{role.name}
+
+   //-script(src="../js/Admin.js")
+   script.
+      var rolesConnect = io.connect('http://localhost', {'reconnect': false, 'auto connect': false});   // 关闭自动连接，以及重新连接
+      var userId = document.getElementById("userId").value;
+      var userType = document.getElementById("userType").value;
+      //rolesConnect.emit("roles");
+      if (userId != "undefined" && userType != "undefined" && userType == "admin") {
+         rolesConnect.on('roles' + userId, function (data, fn) {
+            if (data != null && data.updateRole != null && data.updateRole.length > 0) {
+               document.getElementById("updateData").setAttribute('value', JSON.stringify(data.updateRole));
+            }
+            fn(200); // 回调给服务器的函数：200客户端成功接收信息
+            rolesConnect.disconnect();
+         });
+      }
+
+   script(src='/js/OrganRoleList.js',type='text/javascript',charset='utf-8')

@@ -1,0 +1,25 @@
+//
+   Created by yuzaizai on 2017/1/17.
+
+extends ../userLayout
+block network-nav
+   script(type='text/javascript').
+      $(".network-menu[tit=statistic]").addClass("active").siblings().removeClass("active");
+      $(".network-menu[tit] .nav-icons").removeClass("ac");
+      $(".network-menu[tit=statistic] .nav-icons").addClass("ac");
+
+block content
+   input(id="statisticData", type="hidden", value= "#{JSON.stringify(statisticData)}" )
+   form(method="GET", action="",id = "statisticForm")
+      .content-left(style='overflow:hidden;')
+         .network-nav
+         .network-nav-items.active( tit='all',onclick="statisticAnalysis();")
+            span.nav-icons.myfile
+            span.nav-item-title  映射统计信息
+         .network-nav-items(tit='collaboration', onclick="analysisData();")
+            span.nav-icons.mycola
+            span.nav-item-title 映射分析信息
+
+    div#canvasDiv
+   script(src='/js/ichart.1.2.1.min.js',type='text/javascript',charset='UTF-8')
+   script(src='/js/Statistic.js',type='text/javascript',charset='UTF-8')

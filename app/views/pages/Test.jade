@@ -1,0 +1,487 @@
+doctype html
+html
+   head
+      meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+      title ProcessOn - 我的文件
+      meta(name='description', content='ProcessOn是一个在线协作绘图平台，为用户提供最强大、易用的作图工具！支持在线创作流程图、BPMN、UML图、UI界面原型设计、iOS界面原型设计等。同时依托于互联网实现了人与人之间的实时协作和共享。')
+      meta(name='keywords', content='免费在线作图工具,UML作图,UI界面原型设计,iOS原型设计,BPMN,流程图,思维导图,多人协作绘图')
+      style(type='text/css').
+         body{font-family:'Microsoft Yahei', 'Helvetica Neue', Helvetica, Arial, sans-serif;}
+      script(type='text/javascript').
+         // Google Anlytics
+         var _gaq = _gaq || [];
+         _gaq.push(['_setAccount', 'UA-28802488-1']);
+         _gaq.push(['_trackPageview']);
+         (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+         })();
+         //   var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+         //   document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F2e25a5f27e6a91adc897f5760b9f753f' type='text/javascript'%3E%3C/script%3E"));
+         var isIE=!!window.ActiveXObject;
+         var isIE6=isIE&&!window.XMLHttpRequest;
+         if(isIE6){
+            window.location.href="/browser_not_support";
+         }
+      include ../includes/head
+   body
+      #header
+         #header_nav
+            .header_nav_items
+               a.logo(href='/')
+                  img(src='/images/default/logo/logo_m.png')
+               a.header_nav_link(href='/diagrams') 我的文件
+               a.header_nav_link(href='/popular') 推荐
+               a.header_nav_link(href='/explore') 发现
+               a.header_nav_link(href='/teams') 小组
+            .header_search
+               form#global_form(action='/search', method='get', onsubmit='return Header.doSearch();')
+                  input#global_input(type='text', name='q', value='', placeholder='搜索')
+            .header_right
+               .header_label
+                  a.header_ico.add_file(href='/diagrams/new', target='_blank', title='新建文件')
+               #header-user.header-user
+                  img.radius3(src='/file/55e70601e4b095f061cb5233/photo')
+                  | 鱼仔仔
+                  span.header-drop
+                  a.notification_badge(href='javascript:void(0)')
+                  ul#header_user_menu
+                     li
+                        a(href='/u/55e70601e4b095f061cb5232/profile', target='_blank') 个人主页
+                     li
+                        a.noover(href='/notification')
+                           | 通知中心
+                           span.badge.warning.global-tip
+                     li
+                        a.noover(href='/message')
+                           | 私信
+                           span.badge.warning.global-tip
+                     li
+                        a.noover(href='/setting') 账户设置
+                     li
+                        a.noover(href='/support') 帮助（反馈）
+                     li
+                        a(href='/login/out') 退出
+      #header_clear(style='width:100%;clear:both;height:42px;')
+      #bg-content
+      .network
+         .network-left(style="width: 130px;")
+            a.network-menu(href='/network', tit='home')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.home.ac
+                  span.network-menu-title 首页
+            a.network-menu(href='/diagrams', tit='diagrams')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.files
+                  span.network-menu-title 我的文件
+            a.network-menu(href='/myteams', tit='teams')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.teams
+                  span.network-menu-title 我的小组
+            a.network-menu(href='/friends', tit='friends')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.friends
+                  span.network-menu-title 我的好友
+            a.network-menu(href='/network/invite', tit='invite')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.message
+                  span.network-menu-title 邀请
+         script(type='text/javascript').
+            var bgurl = "http://7xvl2k.com1.z0.glb.clouddn.com/bg_3.jpg";
+            if(bgurl != ""){
+               $("#bg-content").css({
+                  "background-image":"url(http://7xvl2k.com1.z0.glb.clouddn.com/bg_3.jpg)"
+               });
+            }
+            $(".network-menu[tit=diagrams]").addClass("active").siblings().removeClass("active");
+            $(".network-menu[tit] .nav-icons").removeClass("ac");
+            $(".network-menu[tit=diagrams] .nav-icons").addClass("ac");
+         .network-right
+            .content-left(style='overflow:hidden;')
+               .network-nav
+                  .network-nav-items.active(tit='all', onclick="DM.load({resource: '', folderId: ''})")
+                     span.nav-icons.myfile
+                     span.nav-item-title 我的文件
+                  .network-nav-items(tit='collaboration', onclick="DM.load({resource: 'collaboration', page: 1})")
+                     span.nav-icons.mycola
+                     span.nav-item-title 与我协作的
+                  .network-nav-items(tit='fav', onclick="DM.load({resource: 'fav', page: 1})")
+                     span.nav-icons.mylike
+                     span.nav-item-title 我的收藏
+                  .network-nav-items(tit='history', onclick="DM.load({resource: 'history', folderId: ''})")
+                     span.if.if-history.myhistory
+                     span.nav-item-title 最近修改
+                  .network-nav-items(tit='trash', onclick="DM.load({resource: 'trash', folderId: ''})")
+                     span.nav-icons.mytrash
+                     span.nav-item-title 回收站
+                  .clear
+               .network-content
+            .content-right
+               .file-thumb
+                  img#thumb_img(src='/images/default/diagrams/folder.png')
+               #preview_container
+                  .file-pre-box
+                     h3 信息
+                     ul#preview_box
+                        li.noover
+                           | 标题：
+                           span#file_info_title
+                        li(style='display:none')
+                           | 已选中
+                           span#file_info_selected
+                        li(style='display:none')
+                           | 创建时间：
+                           span#file_info_date
+                        li(style='display:none')
+                           | 修改时间：
+                           span#file_info_modify
+                        li(style='display:none')
+                           | 拥有者：
+                           a#file_info_owner(href='#')
+                        li(style='display:none')
+                           | 收藏时间：
+                           span#file_info_favtime
+                        li(style='display:none')
+                           | 删除日期：
+                           span#file_info_deletetime
+                        li(style='display:none')
+                           | 修改时间：
+                           span#file_info_modtime
+                  #colla_items.file-pre-box
+               .diagrams-info
+                  .network-right-levelbar.diagram_right_stats_bar
+                     .network-right-levelbar-inner(style='height:13px;')
+                     span
+                  .diagrams-info-des
+                     a(href='/support/privatefile', target='_blank') 扩容
+                  .diagrams-info-sign
+      ul#more_menu.popmenu.radius3.shadow_1
+         li#menu_clone(onclick='DM.newCreateConfirm()') 克隆
+         li.split
+         li#menu_edit(onclick="DM.showTitleEdit('edit')") 重命名
+         li#menu_mc(onclick='DM.showCopy()') 移动和复制
+         li#menu_nm(onclick='DM.openWithNewMind()') 用新版脑图打开
+      ul#coll_role_menu.popmenu.radius3.shadow_1
+         li(role='editor')
+            span
+            | 编辑者
+         li(role='viewer')
+            span
+            | 浏览者
+      ul#share_menu.popmenu.radius3.shadow_1
+         li.collaboration(onclick='DM.Colla.showAdd()') 添加协作成员
+         li.split
+         li.publish_processon(onclick='DM.showPublish()') 发布到ProcessOn
+         li.embed_other_site(onclick='DM.showPublishEmbed()') 嵌入到其他站点
+         li.online_pic(onclick='DM.onlinePic()') 生成在线图片地址
+         li.split
+         li(onclick='DM.showViewLink()') 分享浏览链接
+         li(onclick='DM.showExport()') 下载
+      #import_file_window(title='选择本地文件')
+         form#import_visio_file(action='/folder/importOnlyVisioFile', enctype='multipart/form-data', method='post', name='import_visio_file')
+            .import_content
+               #selectfile_btn.selectfile_btn.button
+                  .ico
+                  | 选择文件
+                  input#importVisiopath(type='file', name='importVisiopath', onchange='fileChange()')
+                  input#teamId(type='hidden', name='teamId', value='')
+               .only_visio_file 请上传一个Visio文件(*.vdx),当前我们仅支持Visio中的Cross-function | Flowchart
+               .import_file_wraper
+                  label 文件名:
+                  input#fileName.txt(type='text', name='fileName')
+               #import_error.alert.error
+               #import_success.alert.success
+            .import_visio_btns
+               span.button.default.submit_btn(onclick='importBtnSubmit()') 导入
+               span.button(onclick="$('#import_file_window').dialog('close')") 取消
+      #view_link_window(title='分享浏览链接', style='display:none;position:relative;overflow:hidden;width:530px;min-height: 310px;')
+         .create_view_link
+            h3(style='font-weight: 100px;')
+               span._tip1 创建分享浏览链接
+               | -“
+               span._tip2
+               | ”
+            div
+               input#_view_link_input.transition_0_2.txt(type='text', onclick='$(this).select();', style='display:inline-block;line-height:25px;height:25px;width:98%;float:left;', placeholder='您还没有给文件创建分享链接')
+               label.create.button(style='line-height: 35px;display:inline-block;float:right;', onclick='DM.createViewLink(this)') 创建浏览链接
+               div(style='clear:both;')
+            .create_dis(style='position:relative;margin: auto;margin-top: 17px;height: 100px;font-size: 13px;text-shadow: 0px 1px 0px rgba(255,255,255,0.3);background: #deecf9;text-align:left;line-height: 20px;padding:15px 20px;border: 1px solid #b5bdc5;word-wrap: break-word;word-break: normal; ')
+               p 希望分享给别人，又不想完全公开？您可以在此创建一个浏览链接，分享给别人后，可以通过此链接来安全地浏览您的文件。
+               p 当然，您也可以给浏览链接添加密码，以便您享有更多的控制权限。
+            .create_btns(style='text-align:right;margin-top:17px;position:relative;')
+               span.button.default(onclick="$('#view_link_window').dialog('close');") 关闭
+      #dlg_online_pic(title='生成在线图片地址', style='display:none;position:relative;overflow:hidden;width:530px;min-height:170px;')
+         .create_view_link
+            h3(style='font-weight: 100px;')
+               span._tip1 成功创建图片链接
+            div
+               input#img_link_input.transition_0_2.txt(type='text', readonly='', style='display:inline-block;line-height:25px;height:25px;width:98%;float:left;color:#333;', value='')
+               div(style='clear:both;')
+            .create_btns(style='text-align:right;margin-top:17px;position:relative;')
+               span.button.default(onclick="$('#dlg_online_pic').dialog('close');", style='line-height:35px;') 关闭
+      #dlg_new_folder(style='width:350px;display:none')
+         .dlg_content
+            label 名称：
+            input#folder_new_title.txt(type='text')
+         .dlg_buttons
+            input#btn_submit_folder.button.default(type='button', value='确定')
+            input.button(type='button', onclick="$('#dlg_new_folder').dialog('close')", value='取消')
+      #folderlist_panel.radius3.shadow_1(style='width:395px;max-height:320px; overflow-y:auto;display:none')
+      #dlg_copy(style='width:420px;height:180px;display:none', title='移动/复制 选中的项')
+         .dlg_content
+            span(style='font-weight: bold;') 请选择您想复制/粘贴到的目标文件夹：
+            span.button(style='display:block; text-align:left; margin-top: 5px;', onclick='DM.dropFolderList(this)')
+               span.drop(style='float:right; margin-top:8px;')
+               span.changer_folder(folderid='root') 我的文件
+         .dlg_buttons
+            img#move_copy_progress(style='display:none;', src='/images/default/loading.gif')
+            span#btn_submit_move.button(href='javascript:', onclick='') 移动
+            span#btn_submit_copy.button(href='javascript:', onclick='') 复制
+            span.button(href='javascript:', onclick="$('#dlg_copy').dialog('close')") 取消
+      #dlg_publish(style='display:none;width: 515px;min-height: 300px;overflow:hidden;', title='发布到ProcessOn')
+         #publish_show_link.dlg_publish_tip._content(style='display:none;padding:0px;margin-top: 50px;')
+            div(style='height: 180px;background: #F7F7F7;border: 1px solid #c7cfd7;')
+               div(style='font-size: 15px;line-height: 20px;margin-top: -25px;padding-bottom: 10px;')
+                  | 当前文件状态为已发布，您可以：
+               div(style='text-align:center;padding-top:16px;width: 340px;margin: auto;')
+                  #btn_submit_private.dlg_publish_op
+                     span(style='margin-top:20px;padding-top:55px;display:block;height:80px;text-align: center;')
+                        span.bg.back
+                        | 取消发布
+                  div(style='width:40px;float:left;display:inline-block;height:100px;text-align:center;line-height:100px;')
+                     | 或者
+                  #to_publish_edit.dlg_publish_op
+                     span(style='margin-top:20px;padding-top:55px;display:block;height:80px;text-align: center;')
+                        span.bg.edit
+                        | 修改发布信息
+                  .clear
+            .dlg_buttons(style='margin: 0px;padding-top: 13px;')
+               span#btn_submit_close.button(onclick="$('#dlg_publish').dialog('close')")
+                  | 关闭
+         ._publish_content.publish_opt._content(style='display:none;width: 509px;text-align:left;margin: auto;')
+            #publish_show_tip.dlg_publish_tip
+               | 发布之后您的作品会第一时间被推荐到首页，让您获取到业界专家的点评和用户的分享，同时你还会得到2张私有文件的奖励。
+            ul.publis_items
+               li
+                  ._title 描述：
+                  textarea#publish_description.txt(style='width: 400px;height: 50px;')
+               li
+                  ._title 标签：
+                  #publish_addtags.feedTags(onclick="$('#tag_input').focus();")
+                     #tag_items.input_item_box
+                     input#tag_input(type='text')
+                  #tag_tip(style='margin-left: 90px;color:red') 请至少输入一个标签
+               li
+                  ._title 分类：
+                  select#publish_industry.txt(style='width: 230px;margin: 0px')
+                     option(value='', style='color:#c9c9c9')
+                        | 选择分类
+                     option(value='10010')
+                        | 资产管理
+                     option(value='11074')
+                        | 业务流程管理与改进
+                     option(value='10006')
+                        | 客户服务
+                     option(value='11179')
+                        | 环境健康与安全
+                     option(value='10012')
+                        | 外部关系
+                     option(value='10009')
+                        | 财务
+                     option(value='10007')
+                        | 人力资源
+                     option(value='10008')
+                        | 信息技术
+                     option(value='10013')
+                        | 知识管理
+                     option(value='10004')
+                        | 市场与销售
+                     option(value='10003')
+                        | 产品开发与服务
+                     option(value='10005')
+                        | 供应链
+                     option(value='10002')
+                        | 愿景与战略
+                     option(value='science')
+                        | 学术
+                     option(value='life')
+                        | 生活
+               li
+                  ._title 语言：
+                  select#publish_language.txt(style='width:230px;margin: 0px')
+                     option(value='', style='color:#c9c9c9')
+                        | 选择语言
+                     option(value='pt-BR')
+                        | 葡萄牙语（巴西）
+                     option(value='fr-CA')
+                        | 加拿大法语
+                     option(selected='', value='zh-CN')
+                        | 中文简体
+                     option(value='cs')
+                        | 捷克语
+                     option(value='da')
+                        | 丹麦文
+                     option(value='nl')
+                        | 菏兰语
+                     option(value='en')
+                        | 英语
+                     option(value='fi')
+                        | 芬兰语
+                     option(value='fr')
+                        | 法语
+                     option(value='de')
+                        | 德语
+                     option(value='hu')
+                        | 匈牙利语
+                     option(value='it')
+                        | 意大利语
+                     option(value='ja')
+                        | 日语
+                     option(value='ko')
+                        | 韩语
+                     option(value='no')
+                        | 挪威语
+                     option(value='pl')
+                        | 波兰语
+                     option(value='pt')
+                        | 葡萄牙语
+                     option(value='ru')
+                        | 俄语
+                     option(value='sk')
+                        | 斯洛伐克
+                     option(value='es')
+                        | 西班牙语
+                     option(value='sv')
+                        | 瑞典语
+               li
+                  ._title 开放编辑：
+                  div(style='display: inline-block; line-height: 30px;')
+                     input#public_edit.checkbox(type='checkbox', name='public_edit', style='vertical-align: middle')
+                     label(for='public_edit', style='cursor: pointer;color:#948b88') (其他人可以和你一起编辑这个文件)
+               li
+                  ._title 允许克隆：
+                  div(style='display: inline; line-height: 30px;')
+                     input#public_clone(type='checkbox', name='public_clone')
+                     label(for='public_clone', style='color:#948b88;cursor: pointer') (其他人可以克隆你当前发布的文件)
+            .dlg_buttons(style='margin-top: 0px;padding-top: 5px;')
+               span#btn_submit_publish.button.default
+                  | 确定
+               span#btn_submit_close.button(onclick="$('#dlg_publish').dialog('close')")
+                  | 取消
+      #dlg_publish_embed(style='display:none;overflow:hidden;width: 800px;height: 390px;', title='嵌入到其他站点')
+         div(style='float:left;overflow:auto;width: 450px;height: 330px;position:relative;border: 1px solid #999;box-shadow:inset 0px 0px 15px rgba(0,0,0,0.5);-webkit-box-shadow:inset 0px 0px 15px rgba(0,0,0,0.5);-moz-box-shadow:inset 0px 0px 15px rgba(0,0,0,0.5);-o-box-shadow:inset 0px 0px 15px rgba(0,0,0,0.5);-ms-box-shadow:inset 0px 0px 15px rgba(0,0,0,0.5);')
+            .embed_preview_wrap(style='max-width:450px;max-height:330px;position:absolute;top:50%;left:50%;')
+               .embed_preview(style='margin:auto;')
+         .embed_attributes(style='width: 320px;height: 330px;float:right;margin-left:25px;position: relative;')
+            #embed_show_tip.dlg_publish_tip
+               | 通过下面的代码，您可以将你的文件嵌入到其他网站实现更好的分享和推广。
+            .copy_descr 复制下面的代码：
+            textarea#iframe_html.iframe_html.txt(readonly='readonly')
+            .embed_size(style='width: 100%;margin-top: 5px;')
+               label(for='embed_width', style='font-weight: bold;margin: 0px 5px;') 宽度:
+               input#embed_width.txt(type='text', name='embed_width', style='width: 35px;', value='430')
+               label(for='embed_width') px
+               | ,
+               label(for='embed_height', style='font-weight: bold;margin: 0px 5px;') 高度:
+               input#embed_height.txt(type='text', name='embed_height', style='width: 35px;', value='320')
+               label(for='embed_height') px
+            div(style='position: absolute;width: 100%;text-align:right;bottom:-10px;right:0px;')
+               span#btn_submit_close.button(onclick="$('#dlg_publish_embed').dialog('close')")
+                  | 关闭
+         div(style='clear:both;')
+      #dlg_export(title='下载', style='min-width:400px; height:auto; display:none;')
+         .export-box
+            ul.export-list
+               li.first
+                  input#export_png(type='radio', name='export-format', value='image', checked='checked', style='float:left;margin-right: 5px;')
+                  label.export-menu(for='export_png', style='float:left;line-height: 18px;')
+                     | 图片文件
+                     span.suffix (*.png)
+                     span.export_des 将文件导出为图片
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_pdf(type='radio', name='export-format', value='pdf', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_pdf', style='float:left;line-height: 18px;')
+                     | PDF文件
+                     span.suffix (*.pdf)
+                     span.export_des 由图片保存成的PDF文件
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_pdfHD(type='radio', name='export-format', value='pdfHD', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_pdfHD', style='float:left;line-height: 18px;')
+                     | PDF文件
+                     span.suffix (*.pdf)
+                     span.export_des 导出高清PDF文件（仅支持部分字体样式）
+                  img(style='margin-left:5px;', src='/images/icon/icon_new.gif')
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_pos(type='radio', name='export-format', value='pos', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_pos', style='float:left;line-height: 18px;')
+                     | POS文件
+                     span.suffix (*.pos)
+                     span.export_des 包含图片与图形结构定义（可导入）
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_svg(type='radio', name='export-format', value='svg', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_svg', style='float:left;line-height: 18px;')
+                     | SVG文件
+                     span.suffix  (*.svg)
+                     span.export_des 导出为SVG矢量图形
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_xmind(type='radio', name='export-format', value='xmind', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_xmind', style='float:left;line-height: 18px;')
+                     | XMind文件
+                     span.suffix  (*.xmind)
+                     span.export_des 导出为XMind文件
+                  img(style='margin-left:5px;', src='/images/icon/icon_new.gif')
+                  div(style='clear:both;')
+            ul.export-list
+               li.first
+                  input#export_fmind(type='radio', name='export-format', value='fmind', style='float:left;margin-right:5px;')
+                  label.export-menu(for='export_fmind', style='float:left;line-height: 18px;')
+                     | FreeMind文件
+                     span.suffix  (*.mm)
+                     span.export_des 导出为FreeMind文件
+                  img(style='margin-left:5px;', src='/images/icon/icon_new.gif')
+                  div(style='clear:both;')
+         form#export_form(action='/diagram_export', method='get', style='display:none')
+            input#export_type(name='type', type='hidden', value='')
+            input#export_id(name='chartId', type='hidden', value='')
+            input#export_mind(name='mind', type='hidden', value='')
+         .dlg_buttons
+            span#export_submit.button.default(style='margin-right:10px', onclick='DM.doExport()') 确定
+            span.button(onclick="$('#dlg_export').dialog('close')") 取消
+      #colla_add(title='添加协作成员', style='display: none')
+         div(style='padding: 0px 0px 10px; width: 450px')
+            p#add_step1
+               span.badge 1
+               | 输入受邀请人姓名或者邮箱。
+            p#add_step2
+               span.badge.info 2
+               | 点击所选成员，即可邀请其加入您文件协作。
+            input#input_add_colla.txt(type='text', style='width: 425px; padding: 8px 10px;')
+            #colla_suggest_box
+      #dlg_import.dialog_box.dlg-import(style='display:none;')
+         h2.dialog_title
+            | 文件导入
+         form#share_upload_form(action='/import/flow', method='post', enctype='multipart/form-data')
+            label.upload-contents(for='share_doc_input')
+               .drop-img
+                  span.if.if-import
+               .drop-text
+                  span 直接拖入文件，即可上传
+               .btn-wrap
+                  #import_btn.button.default.btn-lg 添加文件
+            input#sys_input(type='hidden', name='sys', value='Windows')
+            input#type_input(type='hidden', name='type', value='vsd')
+            input#name_input(type='hidden', name='fileName')
+            input#team_input(type='hidden', name='teamId')
+            input#folder_input(type='hidden', name='folder')
+         .des-list

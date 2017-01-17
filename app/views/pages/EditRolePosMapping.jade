@@ -1,0 +1,34 @@
+//
+   Created by yuzaizai on 2016/11/28.
+extends EditRoleMapping
+
+block organ
+   .row.clearfix
+      .col-md-12.column
+         ul.nav.nav-tabs
+            li.active
+               a(href='#') 首页
+            li
+               a(href='#') 简介
+            li
+               a(href='#') 信息
+
+   label.btn-success 组织职位
+   label.h4 映射维度选择
+   select#mapscope
+      option(value='position',selected='selected') 组织职位
+      option(value='department') 组织部门
+      option(value='role') 组织角色
+   form(method="POST", action="organPos" ,id="editOrganPosForm")
+      table.table.table-hover.table-bordered(id="editPosTable",type="hidden")
+         thead
+            tr
+               th 组织职位名
+               th 所属部门
+               th 所属角色
+         tbody
+            each position in organPos
+               tr(class="item-id-#{position._id}")
+                  td: button.button-glow.button-border.button-rounded.button-primary(name="organPos",data-id="#{position._id}",type="button",value="#{position.posName}",id="#{position._id}") #{position.posName}
+                  td(id="dep#{position._id}")  #{position.depName}
+                  td(id="role#{position._id}")  #{position.roleName}

@@ -1,0 +1,29 @@
+//
+   Created by yuzaizai on 2016/5/25.
+
+// 内部链接访问组织注册页
+extends ../userLayout
+block content
+   .container
+      .row
+         .col-md-5
+            form(method="POST", action="",id="RegisterOrganForm")
+               .modal-body
+                  .form-group
+                     label(for="organName") 组织名（必填）
+                     input#organName.form-control(name="organization[organName]", type="text")
+                  .form-group
+                     label(for="organPosUri") 职位访问URI（必填）
+                     input#organPosUri.form-control(name="organization[posUri]",type="text")
+                  .form-group
+                     label(for="organRoleUri") 角色访问URI（选填）
+                     input#organRoleUri.form-control(name="organization[roleUri]",type="text")
+                  .form-group
+                     label(for="organDepUri") 部门访问URI（选填）
+                     input#organDepUri.form-control(name="organization[depUri]", type="text")
+                  .form-group
+                     input(name="organization[userId]", type="hidden" ,value=user._id)
+               .modal-footer
+                  button.btn.btn-default(type="button", data-dismiss="modal",onclick='backOrganList();') 返回
+                  button.btn.btn-success(type="button",onclick='registerOrgan();') 提交
+   script(src='/js/SignupOrgan.js')

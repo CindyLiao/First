@@ -1,0 +1,72 @@
+doctype html
+// saved from url=(0026)https://www.processon.com/
+html
+    head
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        title Mapping - 映射中心
+        meta(name='description', content='在线映射中心，对组织与应用之间的关系进行解耦合')
+        meta(name='keywords', content='')
+        style(type='text/css').
+            body {
+                font-family: 'Microsoft Yahei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            }
+        link(type='text/css', rel='stylesheet', href='/stylesheets/global.css')
+        link(type='text/css', rel='stylesheet', href='/stylesheets/iconfont.css')
+        link(type='text/css', rel='stylesheet', href='/stylesheets/home.css')
+    body
+        div
+            .banner-left
+            .banner-right
+            .banner.banner1.active(alt='one', style='opacity: 1;')
+                .banner-main
+                    .banner-main-parent
+                        label.banner-title 在线映射中心
+                        .banner-content(style='width:270px;')
+                            |对组织与应用之间的关系进行解耦合
+                            br
+                            | 我们认为，一张完美的图，一定是多个人思想碰撞的结晶。
+                            .banner-op(style='bottom:-75px;')
+                                a.button.green.banner-btn(href='/signin') 登录
+                                a.button.default.banner-btn(href='/signup') 注册
+                        .banner-image(style='right: -20px; top: 80px;')
+                            #play_btn.play-btn.if.if-play
+                            img(alt='ProcessOn', style='width:680px;height:400px;', src='images/index_body.jpg')
+        .home-header-main
+            .home-header
+                img#logo1(style='width:150px;vertical-align: middle;', src='/images/logo.png')
+                img#logo2(style='width:150px;vertical-align: middle;display:none;position: absolute;top:10px;', src='/images/title.png')
+            div(style='clear:both;')
+            #p-bottom
+                .global_footer_content
+                        ul.footer_items
+                            li
+                                a(href='/signup') 注册
+                            li
+                                a(href='/signin') 登录
+                            li
+                                a(href='#') 关于我们
+                            li
+                                a(href='#') 功能
+                            li
+                                a(href='#') 隐私权政策
+                            li
+                                a(href='https://www.processon.com/tos') 服务条款
+                        .footer_language
+                            script(type='text/javascript').
+                                function setFooterLocale(locale) {
+                                    var loc = window.location;
+                                    window.location.href = "/setting/locale?language=" + locale + "&back=" + loc;
+                                }
+                            a(href='javascript:', onclick="setFooterLocale('zh')") 中文
+                            a(href='javascript:', onclick="setFooterLocale('en')") English
+                            a(href='javascript:', onclick="setFooterLocale('pt')") Português‬
+                            a(href='javascript:', onclick="setFooterLocale('de')") Deutsch
+                            a(href='javascript:', onclick="setFooterLocale('it')") Italian
+                a(style='display:none;', key='54f13325c274e72858c90a86', logo_size='124x47', logo_type='realname', href='http//localhost:3000')
+        #play_content.play-dlg
+            .dialog_close(style='display:block;z-index:1;')
+            video#player(width='640', height='360')
+            .if.if-play.play-btn
+            .if.if-pause.play-btn
+
+                                                                       

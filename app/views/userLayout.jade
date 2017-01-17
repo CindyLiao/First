@@ -1,0 +1,103 @@
+//
+   Created by yuzaizai on 2016/11/29.
+
+doctype html
+// saved from url=(0034)https://www.processon.com/diagrams
+html
+   head
+      meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+      title MappingOn - 我的映射
+      style(type='text/css').
+         body {
+            font-family: 'Microsoft Yahei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+         }
+
+      link(type='text/css', rel='stylesheet', href='/stylesheets/global.css')
+      link(type='text/css', rel='stylesheet', href='/stylesheets/iconfont.css')
+      script(type='text/javascript', src='/libs/jquery/dist/jquery.js')
+
+      link(type='text/css', rel='stylesheet', href='/stylesheets/network.css')
+      link(type='text/css', rel='stylesheet', href='/stylesheets/style.css')
+      script(type='text/javascript', charset='UTF-8', src='/js/network.js')
+      include includes/head
+      block head
+   body
+      #header
+         #header_nav
+            .header_nav_items
+               a.logo(href='/')
+                  img(src='http://localhost:3000/images/logo_m.png')
+               a.header_nav_link(href='/map/userMappings') 我的映射
+               a.header_nav_link(href='') 推荐
+               a.header_nav_link(href='') 发现
+               a.header_nav_link(href='') 小组
+            .header_search
+               form#global_form(action='https://www.processon.com/search', method='get', onsubmit='return Header.doSearch();')
+                  input#global_input(type='text', name='q', value='', placeholder='搜索')
+            .header_right
+               .header_label
+                  a.reward-icon.gift_white(href='https://www.processon.com/network/invitelist', target='_blank', style='position: absolute; left: -43px; top: -2px; transform: rotate(-3deg);')
+                  a.header_ico.add_file(href='https://www.processon.com/diagrams/new', target='_blank', title='新建文件')
+               #header-user.header-user
+                  img.radius3(src='http://localhost:3000/images/photo.jpg')
+                  |  #{user.name}
+                  span.header-drop
+                  a.notification_badge(href='javascript:void(0)', style='display: none;')
+                  ul#header_user_menu
+                     li
+                        a(href='/user/userpage', target='_blank') 个人主页
+                     li
+                        a.noover(href='')
+                           | 通知中心
+                           span.badge.warning.global-tip(style='display: none;') 0
+                     li
+                        a.noover(href='')
+                           | 私信
+                           span.badge.warning.global-tip(style='display: none;') 0
+                     li
+                        a.noover(href='') 账户设置
+                     li
+                        a.noover(href='') 帮助（反馈）
+                     li
+                        a(href='/logout') 退出
+      #header_clear(style='width:100%;clear:both;height:42px;')
+      script(type='text/javascript', charset='UTF-8', src='/js/header.js')
+      #bg-content(style='background-image: url("http://localhost:3000/images/bg_3.jpg");')
+      .network(style='height: 832px;')
+         .network-left(style='width: 130px;')
+            a.network-menu(href='/user/userpage', tit='home', style='height: 100px;')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.home
+                  span.network-menu-title 首页
+            a.network-menu(href='/map/userMappings', tit='mapping', style='height: 100px;')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.files
+                  span.network-menu-title 我的映射
+            a.network-menu(href='/organ/organList', tit='organs', style='height: 100px;')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.teams
+                  span.network-menu-title 我的组织
+            a.network-menu(href='/app/appList', tit='applis', style='height: 100px;')
+               span(style='display:block;padding-top:24px;')
+                  span.nav-icons.friends
+                  span.network-menu-title 我的应用
+            if user.type == 'admin'
+               a.network-menu(href='/map/statisticAnalysis', tit='statistic')
+                  span(style='display:block;padding-top:24px;')
+                     span.nav-icons.message
+                     span.network-menu-title 统计分析
+
+         .network-right(style='width: 1760px; left: 130px;')
+            .content-left
+               .network-nav
+                  block network-nav
+                     input(id='tit',value='#{title}' type='hidden')
+                     h3(style='margin-left: 20px;')
+               .network-content
+                  .main_btns
+                     block main_btn
+                  .content_container(style='height: 100%;')
+                     block content
+
+
+

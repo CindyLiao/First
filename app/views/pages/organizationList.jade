@@ -1,0 +1,56 @@
+//
+   Created by yuzaizai on 2016/5/27.
+
+extends ../userLayout
+block network-nav
+   script(type='text/javascript').
+      $(".network-menu[tit=organs]").addClass("active").siblings().removeClass("active");
+      $(".network-menu[tit] .nav-icons").removeClass("ac");
+      $(".network-menu[tit=organs] .nav-icons").addClass("ac");
+block content
+   form(method="GET", action="",id = "registerOrganInfoForm")
+      .content-left(style='overflow:hidden;')
+         if user.type == "admin"
+            .network-nav
+            .network-nav-items.active( tit='all',onclick="registerOrgan();")
+               span.nav-icons.myfile
+               span.nav-item-title  注册组织信息
+            .network-nav-items(tit='collaboration', onclick="editOrgan();")
+               span.nav-icons.mycola
+               span.nav-item-title 编辑组织信息
+            .network-nav-items(tit='fav', onclick="updateOrganResource();")
+               span.nav-icons.mylike
+               span.nav-item-title 刷新组织信息
+            .network-nav-items(tit='history', onclick="")
+               input(type="checkbox")
+               span.nav-item-title 同步更新
+
+   table.table.table-hover.table-bordered(id="organListTable1")
+      thead
+         tr
+            th 组织名称
+            th 职位URI
+            th 角色URI
+            th 部门URI
+            th 录入时间
+            th 查看
+            th 删除
+      tbody
+         each organ in organs
+            tr(class="item-id-#{organ._id}")
+               td #{organ.organName}
+               td #{organ.posUri}
+               td #{organ.roleUri}
+               td #{organ.depUri}
+               td #{moment(organ.meta.updateAt).format('YYYY/MM/DD')}
+               if user.type == "admin"
+                  td: a(target="_blank",href="/organpos/organPosList/#{organ.organName}") 查看职位
+                      a(target="_blank",href="/organrole/organRoleList/#{organ.organName}") 查看角色
+                      a(target="_blank",href="/organdep/organDepList/#{organ.organName}") 查看部门
+                  td
+                     button.btn.btn-danger.del(type="button", data-id="#{organ._id}") 删除
+               else
+                  td
+                  td
+
+   script(src="/js/OrganizationList.js")

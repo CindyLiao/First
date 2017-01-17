@@ -1,0 +1,29 @@
+//
+   Created by yuzaizai on 2016/11/23.
+// 用户注册页面的组织注册页
+extends ../userLayout
+block content
+   .container
+      .row
+         .col-md-5
+            h2 若暂不注册组织信息可直接提交。
+            form(method="POST", action="",id="organSignupForm")
+               .modal-body
+                  .form-group
+                     label(for="organName") 组织名（必填）
+                     input#organName.form-control(name="organization[organName]", type="text")
+                  .form-group
+                     label(for="organPosUri") 职位访问URI（必填）
+                     input#organPosUri.form-control(name="organization[posUri]",type="text")
+                  .form-group
+                     label(for="organRoleUri") 角色访问URI（选填）
+                     input#organRoleUri.form-control(name="organization[roleUri]",type="text")
+                  .form-group
+                     label(for="organDepUri") 部门访问URI（选填）
+                     input#organDepUri.form-control(name="organization[depUri]", type="password")
+                  .form-group
+                     input(name="organization[userId]", type="hidden" ,value=user._id)
+               .modal-footer
+                  button.btn.btn-default(type="button", data-dismiss="modal") 关闭
+                  button.btn.btn-success(type="button",onclick='organsignup();') 提交
+   script(src='/js/SignupOrgan.js')

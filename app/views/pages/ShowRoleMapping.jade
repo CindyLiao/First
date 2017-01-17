@@ -1,0 +1,30 @@
+//Created by yuzaizai on 2016/11/8.
+extends ../userLayout
+block head
+   title 映射关系显示
+   link(type="text/css",rel='stylesheet',href='/stylesheets/ShowRoleMapping.css')
+   script(type='text/javascript',charset='UTF-8',src='/js/ShowRoleMapping.js')
+block main_btn
+block content
+   .con-show
+      .con-head
+         button.button-border-thin.button-large(style='margin-left: 100px;') 组织职位列表
+         button.button-raised.button-pill.button-inverse(style='margin-left: 12px;' , onclick='location.reload();') 查看整体映射关系
+         button.button-border-thin.button-large(style='margin-left:20px;') 业务角色列表
+         br
+      .con-left
+         input(name="rolemapps",id="rolemapps", type="hidden" ,value='#{JSON.stringify(idMap)}')
+         input(name="partialrolemap",id="partialrolemap", type="hidden" ,value="")
+         each pos in organPos
+            button.button-glow.button-border.button-rounded.button-primary.organPosItem(id="#{pos._id}" ,type="button",value='0',onclick="partialMapping('organ',\'#{pos._id}\');" ) #{pos.posName} #{pos.depName} #{pos.roleName}
+            br
+
+      each busiRole in busiRoles
+         button.button-glow.button-border.button-rounded.button-primary.busiRoleItem(id="#{busiRole._id}" ,type="button",value='0',onclick="partialMapping('busi',\'#{busiRole._id}\');" ) #{busiRole.name}
+         br
+
+
+
+
+
+
