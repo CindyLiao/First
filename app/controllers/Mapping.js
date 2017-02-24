@@ -15,6 +15,7 @@ exports.selectMappingByUserId = function(req,res) {
             console.log("showRoleMapping.js:selectMappingByUserId"+err);
         }
         res.render('Mapping',{
+            title:"映射管理页",
             mapps:mapps
         })
 

@@ -7,7 +7,7 @@ var Mapp =  require('../models/Mapping');
 var OrganPos = require('../models/OrganPos');
 var BusiRole = require('../models/BusinessRole');
 var HashMap = require('../models/HashMap.js');
-
+var Util = require('util');
 
 // 映射关系的显示
 exports.showRoleMapping = function (req,res) {
@@ -677,4 +677,70 @@ exports.updateOrganMapping = function ( req,res,next ) {
         }
     }
     next();
+};
+
+//根据组织角色查找所对应的业务角色
+exports.getBusiRoleByOrganRole = function( req,res) {
+    var _mappingResult="";
+    var _empId = req.params.empId;
+    var _organName = req.params.organName;
+    var _appName = req.params.appliName;
+    var _positionString = req.params.positionString;
+    var _positionObject = JSON.parse(_positionString); // 将json字符串转成json对象
+    Mapp.findOne({organName:_organName,appName:_appName},function(findError,mapp){  // 根据组织名以及应用名唯一查找映射
+        if ( findError ) {
+            console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole"+findError);
+            res.render('Error',{
+                message:"controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>"+findError
+            })
+        }
+        if( !Util.isNullOrUndefined(mapp) && _positionObject.length >0 ) {
+            var _mapId = mapp._id.toString(); // 获取映射id
+            var index = 0 ; // 计数遍历次数
+            _positionObject.forEach(function(item) {  // 遍历该员工所拥有的职位
+                index++;
+                // 根据映射ID，组织名称，员工Id和职位Id 查找对应的职位_id
+                OrganPos.findOne({organName:_organName,posId:item.posId},function(findErr,organPos) {
+                    if (findError) {
+                        console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole" + findErr);
+                        res.render('Error', {
+                            message: "controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>" + findErr
+                        })
+                    }
+                    if (!Util.isNullOrUndefined(organPos) ) {
+                        var _organPosId = organPos._id.toString();
+                        // 根据职位_id和mapId查找对应的业务角色
+                        RoleMapp.find({mapId: _mapId, organPosId: _organPosId}, {busiRoleName:1,_id:0},function (roleFindErr, roleMapp) {
+                            if (roleFindErr) {
+                                console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole" + roleFindErr);
+                                res.render('Error', {
+                                    message: "controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>" + roleFindErr
+                                })
+                            }
+                            if (!Util.isNullOrUndefined(roleMapp) && roleMapp.length > 0){
+                                var roleMappLen = 0;
+                                if ( roleMapp.length == 1) {
+                                    roleMappLen = 1;
+                                    _mappingResult += roleMapp[0].busiRoleName;  // 以字符串的形式返回映射结果
+                                } else {
+                                    roleMapp.forEach(function( busiRole){ // 遍历映射结果
+                                        roleMappLen ++;
+                                        if ( roleMappLen < roleMapp.length)
+                                            _mappingResult+=busiRole.busiRoleName+","; // 拼接返回格式
+                                        else
+                                            _mappingResult+=busiRole.busiRoleName;
+                                    });
+                                }
+
+                                if ( index == _positionObject.length && roleMappLen == roleMapp.length ) {
+                                    res.send(_mappingResult);
+                                }
+                            }
+                        });
+                    }
+                });
+            })
+        }
+    });
+
 };
