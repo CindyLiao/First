@@ -4,9 +4,11 @@
 var mongoose = require('mongoose');
 //2、定义你的数据模型(也就是我们在关系数据库中定义的Table)
 var BusiRoleSchema = new mongoose.Schema({
+    roleId:String,
     name : String,
     proper: String,
     appName:String,
+
     userId: String,
     mapStatu: {
         Type: Number,

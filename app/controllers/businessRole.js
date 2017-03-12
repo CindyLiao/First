@@ -9,38 +9,40 @@ exports.addBusiRole = function(req,res) {
     var appli = req.session.appli;
     var userId = req.session.user._id.toString();
     var _busiRoles = new Array();
-    request.get({url:appli.uri},function(error,roleNames){
+    request.get({url:appli.uri},function(error,roleNames){  // 根据访问接口获取业务角色
         console.log(roleNames.body);
         var body = roleNames.body;
         var obj = JSON.parse(body);
         var len = obj.roles.length;
-        var i=0;
-        for(;i<len;i++) {
-            var busirole = new BusiRole();  // 获取业务角色
-            busirole.name = obj.roles[i].roleName;
-            busirole.appName = appli.appName;
-            busirole.userId = userId;
-            _busiRoles.push(busirole);
-            BusiRole.find({userId:userId,appName:appli.appName,name:busirole.name},function (error,busiRole){ //查找该业务角色是否已经存在
-               if ( error ) {
-                    res.render('Error',{
-                        message:"数据库查询出错！"+error
+        var roles = obj.roles;
+        var index = 0;
+        if ( len > 0  ) {
+            roles.forEach( function (role) {
+                var busirole = new BusiRole();  // 获取业务角色
+                busirole.roleId = role.roleId;
+                busirole.name = role.roleName;
+                busirole.appName = appli.appName;
+                busirole.userId = userId;
+                _busiRoles.push(busirole);
+                // 更新业务角色，若不存在则插入，存在则更新至最新的数据
+                BusiRole.update( { userId:userId,roleId:busirole.roleId,appName:appli.appName,name:busirole.name},
+                    busirole, {safe:true,upsert:true} , function ( updateError, busiRole){
+                        index ++;
+                        if ( updateError ) {
+                            res.render( 'Error' , {
+                                message: "业务角色更新出错！"
+                            });
+                            console.log ( "addBusiRole"+updateError);
+                        }
+                        if ( index == len ) {
+                            res.render('BusiRoleList',{
+                                roles:_busiRoles
+                            })
+                        }
                     })
-               }
-               if (busiRole == null || busiRole.length==0 ) {  // 若业务角色不存在，则存储
-                   _busiRoles.save(function (error, bs) {
-                       if (error) {
-                           console.log(error);
-                       }
-                       console.log(bs);
-                   });
-               }
             });
-
         }
-        res.render('BusiRoleList',{
-            roles:_busiRoles
-        })
+
     })
 
 };

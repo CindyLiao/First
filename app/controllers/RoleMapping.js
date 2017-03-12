@@ -533,7 +533,8 @@ exports.delBusiRoleMapping = function(req,res,next ) {
 exports.addBusiRoleMapping = function (req,res,next ) {
     var _mapId = req.params.mapId;
     var _busiRoleId = req.params.busiRoleId;
-    var _busiRoleName = req.params.busiRoleName;
+    var _busiRoleNameEscape = req.params.busiRoleName;
+    var  _busiRoleName = decodeURI(_busiRoleNameEscape);
     var  string = req.params.mappedOrganPos;
     var _mappedOrganPos = JSON.parse( string );  // 将json字符串格式转换成对象
     var i =0 ; // 索引
@@ -682,10 +683,10 @@ exports.updateOrganMapping = function ( req,res,next ) {
 //根据组织角色查找所对应的业务角色
 exports.getBusiRoleByOrganRole = function( req,res) {
     var _mappingResult="";
-    var _empId = req.params.empId;
-    var _organName = req.params.organName;
-    var _appName = req.params.appliName;
-    var _positionString = req.params.positionString;
+    var _empId = req.body.empId;
+    var _organName = req.body.organName;
+    var _appName = req.body.appName;
+    var _positionString = req.body.positions;
     var _positionObject = JSON.parse(_positionString); // 将json字符串转成json对象
     Mapp.findOne({organName:_organName,appName:_appName},function(findError,mapp){  // 根据组织名以及应用名唯一查找映射
         if ( findError ) {
@@ -741,6 +742,60 @@ exports.getBusiRoleByOrganRole = function( req,res) {
                 });
             })
         }
+    });
+
+};
+
+// 根据组织角色获取业务角色
+exports.getOrganRoleByBusiRole =  function ( req, res ) {
+    var _busiRoles = req.body.busiRoles;
+    var _index = 0;
+    var _organPosResult = "";
+    _busiRoles.forEach ( function ( busirole ) {
+        console.log(busirole);
+        BusiRole.findOne({roleId:busirole}, function ( findError, bsirole){
+            if ( findError  ) {
+                res.render('Error', {
+                    message: "业务角色查找失败！"
+                });
+                console.log("RoleMapping:getOrganRoleByBusiRole:BusiRole.findOne{roleId}" + busirole + "\n" + findError);
+            }
+            if ( Util.isNullOrUndefined(bsirole) ) {
+                res.send( _organPosResult );
+            }
+            var _bsiroleId = bsirole._id.toString();
+            RoleMapp.find( { busiRoleId:_bsiroleId }, function( findErr, roleMapp) {
+                var _roleMapLen = roleMapp.length;
+                var _roleMapLenIndex = 0;
+                _index++;
+                if ( findErr ) {
+                    res.render('Error', {
+                        message:"映射关系查找失败！"
+                    });
+                    console.log(findErr);
+                }
+                if ( !Util.isNullOrUndefined( roleMapp ) && _roleMapLen > 0 ) {
+                     if ( _roleMapLen == 1) {
+                         _roleMapLenIndex =1;
+                         _organPosResult += roleMapp[0].organPosName;
+                     } else {
+                         roleMapp.forEach (  function ( rolemapp) {
+                            _roleMapLenIndex++;
+                            if ( _roleMapLenIndex < _roleMapLen ) {
+                                _organPosResult += rolemapp.organRoleName+",";
+                            } else {
+                                _organPosResult += rolemapp.organRoleName;
+                            }
+                         });
+                     }
+                     if ( _index == _busiRoles.length && _roleMapLenIndex == _roleMapLen ) {
+                         console.log( _organPosResult);
+                         res.send(_organPosResult);
+                     }
+                }
+
+            })
+        })
     });
 
 };
