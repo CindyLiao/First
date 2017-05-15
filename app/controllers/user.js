@@ -29,14 +29,14 @@ exports.signin= function(req,res){
         if (err){
             console.log(err);
         }
-        if(!user) {
+        if(user == null || user == undefined) {
             res.redirect("/signup");
-        }
-        else {
+        } else {
             user.comparePassword(password,function(err,isMatch){
                 if(err){
                     console.log(err);
                 }
+                console.log(password,user.password);
                 if(isMatch){
                     req.session.user = user;
                     res.redirect('/user/userpage');
@@ -49,7 +49,7 @@ exports.signin= function(req,res){
 };
 
 
-//signup
+//signup 注册
 exports.signup = function(req,res){
     var _user = req.body.user;
     User.findOne({name:_user.name},function(err,user){
@@ -126,7 +126,7 @@ exports.getCollabUser = function(req,res) {
     _user.collabUserUri  = _collabUserUri;
     if ( _user) {
         // 更新字段collabUserUri
-        User.where({_id:_user._id}).update({collabUserUri:_collabUserUri},function(error,user){
+        User.update({_id:_user._id},{collabUserUri:_collabUserUri},function(error,user){
             if (error) {
                 res.render('Error',{
                     message:"用户信息更新出错！"+error
@@ -145,30 +145,22 @@ exports.getCollabUser = function(req,res) {
                     if ( empObjects.employees ) {
                         var _index =0;
                         var _empLen = empObjects.employees.length;
-                        for ( var i=0; i < _empLen ; i++ ) {
-                            OrganPos.find({empId:empObjects.employees[_index].id},function(error,positions) {
+                        empObjects.employees.forEach (function( emp ) {
                                 var _userNew = new Object();
-                                _userNew.name = empObjects.employees[_index].name;
-                                _userNew.empId = empObjects.employees[_index].id;
-                                _userNew.password = empObjects.employees[_index].password;
+                                _userNew.name = emp.name;
+                                _userNew.empId = emp.id;
+                                _userNew.password = emp.password;
                                 _userNew.belongTo = _user._id.toString();
-                                if (error) {
-                                    res.render('Error',{
-                                        message:_collabUserUri+"用户职位信息读取出错！"+error
-                                    })
-                                }
-                                if (positions != null  && positions.length > 0 ) {
-                                    _userNew.position = positions;
-                                    _empListArray.push(_userNew);
-                                }
+                                _userNew.posName = emp.posName;
+                                _userNew.depName = emp.depName;
+                                _empListArray.push(_userNew);
                                 if ( _index == _empLen-1 ) {
                                     res.render('showCollaboration',{
                                         empList: _empListArray
                                     })
                                 }
                                 _index++;
-                            })
-                        }
+                        });
 
                     }
                 })
@@ -182,25 +174,43 @@ exports.registerCollabUser = function (req,res) {
     var _empList = JSON.parse(req.params.empList);
     if ( _empList !=null && _empList.length > 0 ) {
         var index = 0;
-        for ( var i=0; i < _empList.length; i++ ) {
-            var pwd =   decrypt(_empList[i].password);
-           var _user = new User({
-               name: _empList[i].name,
-               empId: _empList[i].empId,
-               belongTo: _empList[i].belongTo,
-               password: pwd,
-               type: "user"
-           });
-           _user.save(function(error,user){
-               err(error,"用户信息存储失败！");
-               if( user ) {
-                   if ( index == _empList.length-1 ) {
-                      res.redirect('/admin/showCollaboration');
-                   }
-                   index++;
-               }
-           })
-        }
+        _empList.forEach(function(item){
+            var pwd =   decrypt(item.password);
+          /*  User.findOne({name:item.name,empId:item.empId},function(findError,userF){
+                err(res,findError,"用户信息查找失败！");
+                if( userF !=null && userF != undefined) { // 若用户已经存在
+
+                }
+            });*/
+            /*var _user = new User({
+                name: item.name,
+                empId: item.empId,
+                belongTo: item.belongTo,
+                password: pwd,
+                type: "user"
+            });*/
+            var _userEncryp = new User();
+            var _user=new Object();
+            _user["name"] = item.name;
+            _user["empId"] = item.empId;
+            _user["belongTo"] = item.belongTo;
+            _user["type"] = "user";
+            _userEncryp.bcryptPassword(pwd,function(EncryptErr,encryptPwd){
+                err(res,EncryptErr,"密码加密错误！");
+                _user["password"] = encryptPwd;
+                // 更新或插入，若存在name和empId相同的用户，则更新用户信息，不存在则插入新数据
+                User.update({name:_user.name,empId:_user.empId},_user,{safe:true,upsert:true},function(error,user){
+                    err(res,error,"用户信息存储失败！");
+                    if( user ) {
+                        // 根据用户ID从服务管理中心添加该用户注册过的应用
+                        if ( index == _empList.length-1 ) {
+                            res.redirect(307, '/admin/showCollaboration')
+                        }
+                        index++;
+                    }
+                })
+            });
+        });
     }
 };
 
@@ -208,7 +218,7 @@ exports.registerCollabUser = function (req,res) {
 exports.showCollaboration = function (req,res) {
     var _user = req.session.user;
     User.find({belongTo:_user._id.toString()}, function(error,users){  // 查询已有的协作人
-        err(error,"用户查询出错！"+error);
+        err(res,error,"用户查询出错！"+error);
         if ( users ) {
             res.render('showCollaboration', {
                 title: "添加协作人",
@@ -231,7 +241,7 @@ function decrypt ( enStr ) {
     return  decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-function err ( error,message ) {
+function err ( res,error,message ) {
     if ( error != null ) {
         res.render('Error',{
             message: message+error

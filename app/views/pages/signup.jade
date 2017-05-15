@@ -17,6 +17,9 @@ block content
                   .form-group
                      label(for="signupPasswordLabel") 密码
                      input#userPassword.form-control(name="user[password]", type="password")
+                  .form-group
+                     label(for="signupEmpIdLabel") 职员ID
+                     input.form-control(name="user[empId]", type="text", id="empId")
                .modal-footer
                   button.btn.btn-default(type="button", data-dismiss="modal") 关闭
                   button.btn.btn-success(type="button", onclick="sign();") 下一步

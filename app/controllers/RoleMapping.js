@@ -7,7 +7,7 @@ var Mapp =  require('../models/Mapping');
 var OrganPos = require('../models/OrganPos');
 var BusiRole = require('../models/BusinessRole');
 var HashMap = require('../models/HashMap.js');
-
+var Util = require('util');
 
 // 映射关系的显示
 exports.showRoleMapping = function (req,res) {
@@ -533,7 +533,8 @@ exports.delBusiRoleMapping = function(req,res,next ) {
 exports.addBusiRoleMapping = function (req,res,next ) {
     var _mapId = req.params.mapId;
     var _busiRoleId = req.params.busiRoleId;
-    var _busiRoleName = req.params.busiRoleName;
+    var _busiRoleNameEscape = req.params.busiRoleName;
+    var  _busiRoleName = decodeURI(_busiRoleNameEscape);
     var  string = req.params.mappedOrganPos;
     var _mappedOrganPos = JSON.parse( string );  // 将json字符串格式转换成对象
     var i =0 ; // 索引
@@ -620,7 +621,7 @@ exports.addOrganPosMapping = function (req,res,next ) {
     next();
 };
 
-// 组织角色与业务角色映射的更新
+// 组织角色、组织部门与业务角色映射的更新
 exports.updateOrganMapping = function ( req,res,next ) {
     var role2PosOldString = req.params.role2PosOldString;
     var role2PosNewString = req.params.role2PosNewString;
@@ -677,4 +678,128 @@ exports.updateOrganMapping = function ( req,res,next ) {
         }
     }
     next();
+};
+
+//根据组织角色查找所对应的业务角色
+exports.getBusiRoleByOrganRole = function( req,res) {
+    var _mappingResult="";
+    var _empId = req.body.empId;
+    var _organName = req.body.organName;
+    var _appName = req.body.appName;
+    var _positionString = req.body.positions;
+    var _positionObject = JSON.parse(_positionString); // 将json字符串转成json对象
+    Mapp.findOne({organName:_organName,appName:_appName},function(findError,mapp){  // 根据组织名以及应用名唯一查找映射
+        if ( findError ) {
+            console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole"+findError);
+            res.render('Error',{
+                message:"controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>"+findError
+            })
+        }
+        if( !Util.isNullOrUndefined(mapp) && _positionObject.length >0 ) {
+            var _mapId = mapp._id.toString(); // 获取映射id
+            var index = 0 ; // 计数遍历次数
+            _positionObject.forEach(function(item) {  // 遍历该员工所拥有的职位
+                index++;
+                // 根据映射ID，组织名称，员工Id和职位Id 查找对应的职位_id
+                OrganPos.findOne({organName:_organName,posId:item.posId},function(findErr,organPos) {
+                    if (findError) {
+                        console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole" + findErr);
+                        res.render('Error', {
+                            message: "controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>" + findErr
+                        })
+                    }
+                    if (!Util.isNullOrUndefined(organPos) ) {
+                        var _organPosId = organPos._id.toString();
+                        // 根据职位_id和mapId查找对应的业务角色
+                        RoleMapp.find({mapId: _mapId, organPosId: _organPosId}, {busiRoleName:1,_id:0},function (roleFindErr, roleMapp) {
+                            if (roleFindErr) {
+                                console.log("controller:roleMapping,methodName:getBusiRoleByOrganRole" + roleFindErr);
+                                res.render('Error', {
+                                    message: "controller:roleMapping,methodName:getBusiRoleByOrganRole数据查找出错！</br>" + roleFindErr
+                                })
+                            }
+                            if (!Util.isNullOrUndefined(roleMapp) && roleMapp.length > 0){
+                                var roleMappLen = 0;
+                                if ( roleMapp.length == 1) {
+                                    roleMappLen = 1;
+                                    _mappingResult += roleMapp[0].busiRoleName;  // 以字符串的形式返回映射结果
+                                } else {
+                                    roleMapp.forEach(function( busiRole){ // 遍历映射结果
+                                        roleMappLen ++;
+                                        if ( roleMappLen < roleMapp.length)
+                                            _mappingResult+=busiRole.busiRoleName+","; // 拼接返回格式
+                                        else
+                                            _mappingResult+=busiRole.busiRoleName;
+                                    });
+                                }
+
+                                if ( index == _positionObject.length && roleMappLen == roleMapp.length ) {
+                                    res.send(_mappingResult);
+                                }
+                            } else {
+                                res.send(_mappingResult);
+                            }
+                        });
+                    }
+                });
+            })
+        }
+    });
+
+};
+
+// 根据业务角色获取组织角色
+exports.getOrganRoleByBusiRole =  function ( req, res ) {
+    var _busiRoles = req.body.busiRoles;
+    var _index = 0;
+    var _organPosResult = "";
+    _busiRoles.forEach ( function ( busirole ) {
+        console.log(busirole);
+        BusiRole.findOne({roleId:busirole}, function ( findError, bsirole){
+            if ( findError  ) {
+                res.render('Error', {
+                    message: "业务角色查找失败！"
+                });
+                console.log("RoleMapping:getOrganRoleByBusiRole:BusiRole.findOne{roleId}" + busirole + "\n" + findError);
+            }
+            if ( Util.isNullOrUndefined(bsirole) ) {
+                res.send( _organPosResult );
+            }
+            var _bsiroleId = bsirole._id.toString();
+            RoleMapp.find( { busiRoleId:_bsiroleId }, function( findErr, roleMapp) {
+                var _roleMapLen = roleMapp.length;
+                var _roleMapLenIndex = 0;
+                _index++;
+                if ( findErr ) {
+                    res.render('Error', {
+                        message:"映射关系查找失败！"
+                    });
+                    console.log(findErr);
+                }
+                if ( !Util.isNullOrUndefined( roleMapp ) && _roleMapLen > 0 ) {
+                     if ( _roleMapLen == 1) {
+                         _roleMapLenIndex =1;
+                         _organPosResult += roleMapp[0].organPosName;
+                     } else {
+                         roleMapp.forEach (  function ( rolemapp) {
+                            _roleMapLenIndex++;
+                            if ( _roleMapLenIndex < _roleMapLen ) {
+                                _organPosResult += rolemapp.organPosName+",";
+                            } else {
+                                _organPosResult += rolemapp.organPosName;
+                            }
+                         });
+                     }
+                     if ( _index == _busiRoles.length && _roleMapLenIndex == _roleMapLen ) {
+                         console.log( _organPosResult);
+                         res.send(_organPosResult);
+                     }
+                } else {
+                    res.send(_organPosResult);
+                }
+
+            })
+        })
+    });
+
 };

@@ -28,6 +28,12 @@ exports.addOrganPos = function (req,res) {
             // 根据Uri访问组织职位
             try{
                 request.get({url:_organization.posUri},function (error,poStr){
+                    if ( error ) {
+                        console.log(error);
+                        res.render('Error',{
+                            message:"请求组织资源出错！"
+                        })
+                    }
                     var _posBody = poStr.body; // 获取html页面中的body中的数据
                     var _posObj = JSON.parse(_posBody); // 转成json对象格式
                     // 若数据为空或访问异常
@@ -41,8 +47,8 @@ exports.addOrganPos = function (req,res) {
                     for ( var i=0;i< _posObj.positions.length; i++) {
                         var organPos = new OrganPos();
                         organPos.empId = _posObj.positions[i].empId; // !!!属性名需一致
-                        organPos.depId = _posObj.positions[i].orgId;
-                        organPos.depName= _posObj.positions[i].orgName;
+                        organPos.depId = _posObj.positions[i].depId;
+                        organPos.depName= _posObj.positions[i].depName;
                         organPos.posId = _posObj.positions[i].id;
                         organPos.posName = _posObj.positions[i].posName;
                         organPos.roleId = _posObj.positions[i].roleId;

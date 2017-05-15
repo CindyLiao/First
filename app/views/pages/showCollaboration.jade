@@ -38,26 +38,21 @@ block content
                      th 员工名称
                      th 职位名称
                      th 所属部门
-                     th 所属角色
                tbody
                   each emp in empList
-                     if emp.position && emp.position.length >0
-                        tr
-                           td(rowspan="#{emp.position.length}"): input.form-control(name="subCheck",type="checkbox", checked, value="#{JSON.stringify(emp)}")
-                           td(rowspan="#{emp.position.length}") #{emp.name}
-                           td #{emp.position[0].posName}
-                           td #{emp.position[0].depName}
-                           td #{emp.position[0].roleName}
-                        if emp.position.length >1
-                           script.
-                              emp.position.splice(0,1);
-                           each pos in emp.position
-                              tr
-                                 td
-                                 td
-                                 td #{pos.posName}
-                                 td #{pos.depName}
-                                 td #{pos.roleName}
+                     tr
+                        td: input.form-control(name="subCheck",type="checkbox", checked, value="#{JSON.stringify(emp)}")
+                        td(rowspan=1) #{emp.name}
+                        td #{emp.posName}
+                        td #{emp.depName}
+                        //script.
+                        //   emp.position.splice(0,1);
+                        //each pos in emp.position
+                        //   tr
+                        //      td
+                        //      td
+                        //      td #{pos.posName}
+                        //      td #{pos.depName}
          .modal-footer
             button.button-glow.button-border.button-rounded.button-primary(type="button",value="",id="",onclick="submitForm();") 提交
             button.button-glow.button-border.button-rounded.button-action(type="button",onclick="location.href='/map/userMappings'" ) 返回

@@ -61,9 +61,9 @@ UserSchema.methods = {
         //salt_work_factor 加盐强度
         bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
             if (err) return next(err);
-            bcrypt.hash(_password, salt,null, function(err, hash) {
+            bcrypt.hash(_password, salt,null, function(err, hashPwd) {
                 if (err) return cb(err);
-                cb(null,hash);
+                cb(null,hashPwd);
             })
         })
     }

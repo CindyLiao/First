@@ -3,6 +3,7 @@
 
 extends ../userLayout
 block network-nav
+   label( value ="#{title}")
    script(type='text/javascript').
       $(".network-menu[tit=organs]").addClass("active").siblings().removeClass("active");
       $(".network-menu[tit] .nav-icons").removeClass("ac");
@@ -12,6 +13,11 @@ block content
       .content-left(style='overflow:hidden;')
          if user.type == "admin"
             .network-nav
+               ol.breadcrumb
+                  li
+                     a(href='/signup') 注册
+                  li
+                     a.active 七月
             .network-nav-items.active( tit='all',onclick="registerOrgan();")
                span.nav-icons.myfile
                span.nav-item-title  注册组织信息
@@ -21,9 +27,7 @@ block content
             .network-nav-items(tit='fav', onclick="updateOrganResource();")
                span.nav-icons.mylike
                span.nav-item-title 刷新组织信息
-            .network-nav-items(tit='history', onclick="")
-               input(type="checkbox")
-               span.nav-item-title 同步更新
+
 
    table.table.table-hover.table-bordered(id="organListTable1")
       thead
