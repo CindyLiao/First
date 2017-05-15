@@ -49,7 +49,7 @@ exports.signin= function(req,res){
 };
 
 
-//signup
+//signup 注册
 exports.signup = function(req,res){
     var _user = req.body.user;
     User.findOne({name:_user.name},function(err,user){
@@ -145,30 +145,22 @@ exports.getCollabUser = function(req,res) {
                     if ( empObjects.employees ) {
                         var _index =0;
                         var _empLen = empObjects.employees.length;
-                        for ( var i=0; i < _empLen ; i++ ) {
-                            OrganPos.find({empId:empObjects.employees[_index].id},function(error,positions) {
+                        empObjects.employees.forEach (function( emp ) {
                                 var _userNew = new Object();
-                                _userNew.name = empObjects.employees[_index].name;
-                                _userNew.empId = empObjects.employees[_index].id;
-                                _userNew.password = empObjects.employees[_index].password;
+                                _userNew.name = emp.name;
+                                _userNew.empId = emp.id;
+                                _userNew.password = emp.password;
                                 _userNew.belongTo = _user._id.toString();
-                                if (error) {
-                                    res.render('Error',{
-                                        message:_collabUserUri+"用户职位信息读取出错！"+error
-                                    })
-                                }
-                                if (positions != null  && positions.length > 0 ) {
-                                    _userNew.position = positions;
-                                    _empListArray.push(_userNew);
-                                }
+                                _userNew.posName = emp.posName;
+                                _userNew.depName = emp.depName;
+                                _empListArray.push(_userNew);
                                 if ( _index == _empLen-1 ) {
                                     res.render('showCollaboration',{
                                         empList: _empListArray
                                     })
                                 }
                                 _index++;
-                            })
-                        }
+                        });
 
                     }
                 })

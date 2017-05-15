@@ -15,13 +15,13 @@ block content
             input(type="hidden",value="#{user.belongTo}",id="userId")
         else
             input(type="hidden",value="#{user._id}",id="userId")
-        label.btn-success 应用角色
+        label.btn-success 业务角色
 
         form(method="POST", action="busiRole", id="editBusiRoleForm")
             table.table.table-hover.table-bordered(id="editBusiRoleTable")
                 thead
                     tr
-                        th 应用角色名
+                        th 业务角色名
                 tbody
                     each busiRole in busiRoles
                         tr(class="item-id-#{busiRole._id}")

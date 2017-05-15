@@ -22,9 +22,7 @@ block content
          .network-nav-items(tit='fav', onclick="")
             span.nav-icons.mylike
             span.nav-item-title 刷新组织信息
-         .network-nav-items(tit='history', onclick="")
-            input(type="checkbox")
-            span.nav-item-title 同步更新
+
 
    table.table.table-hover.table-bordered(id="ApplicationListTable")
       thead
@@ -48,5 +46,5 @@ block content
                td: a(target="_blank",href="/busirole/busiroleList/#{appli.appName}") 查看业务角色
                td: a(target="_blank",href="../appli/update/#{appli._id}") 修改
                td
-                  button.btn.btn-danger.del(type="button", data-id="#{appli._id}") 删除
+                  button.btn.btn-danger.del(type="button", data-id="#{appli._id}" onclick="delete_app();") 删除
    script(src="/js/ApplicationList.js")

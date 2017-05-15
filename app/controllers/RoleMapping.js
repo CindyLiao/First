@@ -621,7 +621,7 @@ exports.addOrganPosMapping = function (req,res,next ) {
     next();
 };
 
-// 组织角色与业务角色映射的更新
+// 组织角色、组织部门与业务角色映射的更新
 exports.updateOrganMapping = function ( req,res,next ) {
     var role2PosOldString = req.params.role2PosOldString;
     var role2PosNewString = req.params.role2PosNewString;
@@ -736,6 +736,8 @@ exports.getBusiRoleByOrganRole = function( req,res) {
                                 if ( index == _positionObject.length && roleMappLen == roleMapp.length ) {
                                     res.send(_mappingResult);
                                 }
+                            } else {
+                                res.send(_mappingResult);
                             }
                         });
                     }
@@ -746,7 +748,7 @@ exports.getBusiRoleByOrganRole = function( req,res) {
 
 };
 
-// 根据组织角色获取业务角色
+// 根据业务角色获取组织角色
 exports.getOrganRoleByBusiRole =  function ( req, res ) {
     var _busiRoles = req.body.busiRoles;
     var _index = 0;
@@ -782,9 +784,9 @@ exports.getOrganRoleByBusiRole =  function ( req, res ) {
                          roleMapp.forEach (  function ( rolemapp) {
                             _roleMapLenIndex++;
                             if ( _roleMapLenIndex < _roleMapLen ) {
-                                _organPosResult += rolemapp.organRoleName+",";
+                                _organPosResult += rolemapp.organPosName+",";
                             } else {
-                                _organPosResult += rolemapp.organRoleName;
+                                _organPosResult += rolemapp.organPosName;
                             }
                          });
                      }
@@ -792,6 +794,8 @@ exports.getOrganRoleByBusiRole =  function ( req, res ) {
                          console.log( _organPosResult);
                          res.send(_organPosResult);
                      }
+                } else {
+                    res.send(_organPosResult);
                 }
 
             })

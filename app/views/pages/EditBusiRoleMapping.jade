@@ -8,12 +8,12 @@ block content
     input(name="appName",id="appName", type="hidden" ,value='#{appName}')
     .network-content
         .content-left
-            label.btn-success 应用角色
+            label.btn-success 业务角色
             form(method="POST", action="busiRole", id="editBusiRoleForm")
                 table.table.table-hover.table-bordered(id="editRoleTable")
                     thead
                         tr
-                            th 应用角色名
+                            th 业务角色名
                     tbody
                         each busiRole in busiRoles
                             tr(class="item-id-#{busiRole._id}")
