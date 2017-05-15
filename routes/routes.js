@@ -83,7 +83,9 @@ module.exports = function(app) {
         app.post('/map/showRegisterMapping',User.signinRequired,Mapp.showRegisterMapping);
         app.post('/map/registerMapping',User.signinRequired,Mapp.registerMapping);
         app.get('/map/statisticAnalysis',User.signinRequired,User.adminRequired,Mapp.statistic);   // 统计映射量
-        app.get('/map/analysisData',User.signinRequired,User.adminRequired,Mapp.analysis);  // 分析映射关系
+        app.get('/map/analysisData',User.signinRequired,User.adminRequired,Mapp.getOrganMappedBusiRole,Mapp.analysis,Mapp.similarity);  // 分析映射相似度
+        app.get('/map/redundancyAnalysis',User.signinRequired,User.adminRequired,Mapp.getOrganMappedBusiRole,Mapp.analysis,Mapp.redundancy);  // 分析映射冗余度
+
 
 
     // roleMapping 角色-职位映射
