@@ -46,7 +46,7 @@ exports.addOrganPos = function (req,res) {
                     //遍历positions中的所有数据 ！！！！组织Uri返回的对象命名统一为positions
                     for ( var i=0;i< _posObj.positions.length; i++) {
                         var organPos = new OrganPos();
-                        organPos.empId = _posObj.positions[i].empId; // !!!属性名需一致
+                        //organPos.empId = _posObj.positions[i].empId; // !!!属性名需一致
                         organPos.depId = _posObj.positions[i].depId;
                         organPos.depName= _posObj.positions[i].depName;
                         organPos.posId = _posObj.positions[i].id;
