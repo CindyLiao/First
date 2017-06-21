@@ -128,8 +128,8 @@ exports.organroleList = function(req,res) {
 
 exports.getAllRolesByOrganName = function( req,res ) {
     var _organName =  req.params.organName;
-    var _userId = req.session.user._id.toString();
-    OrganRole.find({userId:_userId,organName:_organName}, function(error,organRoles){
+    var _userId = req.session.user.type !="admin"?req.session.user.belongTo.toString():req.session.user._id.toString();
+    OrganRole.find({organName:_organName,userId:_userId}, function(error,organRoles){
         if(error) {
             console.log(error);
             res.render('Error',{

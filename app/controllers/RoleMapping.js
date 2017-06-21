@@ -294,7 +294,7 @@ exports.organRoleMappingList = function (req,res) {
     var _mapId = req.params.mapId;
     var _appName = req.params.appName;
     var _organRoleName = req.params.organRoleName;
-    var _userId = req.session.user._id.toString();
+    var _userId = req.session.user.type !="admin"?req.session.user.belongTo.toString():req.session.user._id.toString();
     var _role2PosMapping = new Array();
     // 根据应用名获取应用角色列表
     BusiRole.find({appName:_appName}, function (error,busiRoles) {
@@ -405,7 +405,7 @@ exports.organDepMappingList = function ( req,res) {
     var _mapId = req.params.mapId;
     var _appName = req.params.appName;
     var _organDepName = req.params.organDepName;
-    var _userId = req.session.user._id.toString();
+    var _userId = req.session.user.type !="admin"?req.session.user.belongTo.toString():req.session.user._id.toString();
     var _role2PosMapping = new Array();
     // 根据应用名获取应用角色列表
     BusiRole.find({appName:_appName}, function (error,busiRoles) {
